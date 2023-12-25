@@ -3,8 +3,7 @@ name: CI
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+ 
 
 jobs:
   build-and-deploy:
@@ -36,11 +35,6 @@ jobs:
           pnpm install
           pnpm build
 
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          FOLDER: dist
-          CLEAN: true
+      
 
 
