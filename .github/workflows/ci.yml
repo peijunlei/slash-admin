@@ -13,28 +13,27 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
+        
     steps:
-      - name: Checkout 🛎️
+      - name: Checkout 😘
         uses: actions/checkout@v3
 
-      - name: Setup pnpm ⚙️
+      - name: Setup pnpm 😊
         uses: pnpm/action-setup@v2
         with:
           version: 8
 
-      - name: Setup Node.js ${{ matrix.node-version }} ⚙️
+      - name: Setup Node.js ${{ matrix.node-version }} 😁
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
 
-      - name: Install and Build 🔧
+      - name: Install and Build 😍
         run: |
           pnpm install
           pnpm build
-      - name: ssh deploy
+      - name: ssh deploy 💖💕👌
         uses: easingthemes/ssh-deploy@v5.0.0
         with:
           SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
