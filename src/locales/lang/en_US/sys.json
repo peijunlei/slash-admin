@@ -87,6 +87,8 @@
       "workbench": "Workbench",
       "analysis": "Analysis",
       "management": "Management",
+      "goods": "goods",
+      "goods-list": "goods-list",
       "user": {
         "index": "User",
         "profile": "Profile",

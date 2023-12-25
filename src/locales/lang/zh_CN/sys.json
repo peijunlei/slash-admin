@@ -86,6 +86,8 @@
       "workbench": "工作台",
       "analysis": "分析",
       "management": "管理",
+      "goods": "商品",
+      "goods-list": "商品列表",
       "user": {
         "index": "用户",
         "profile": "个人资料",

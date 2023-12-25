@@ -2,6 +2,28 @@ import { faker } from '@faker-js/faker';
 
 import { BasicStatus, PermissionType } from '#/enum';
 
+const CUSTOMER_LIST = {
+  id: '0',
+  parentId: '',
+  label: 'sys.menu.goods',
+  name: 'goods',
+  icon: 'ic-analysis',
+  type: PermissionType.CATALOGUE,
+  route: 'goods',
+  order: 1,
+  children: [
+    {
+      id: '0-0',
+      parentId: '0',
+      label: 'sys.menu.goods-list',
+      name: 'goods-list',
+      type: PermissionType.MENU,
+      route: 'goods-list',
+      component: '/goods/goods-list/index.tsx',
+    },
+  ],
+};
+
 /**
  * Organization data mock
  */
@@ -462,6 +484,7 @@ const OTHERS_PERMISSION = [
 ];
 
 export const PERMISSION_LIST = [
+  CUSTOMER_LIST,
   DASHBOARD_PERMISSION,
   MANAGEMENT_PERMISSION,
   COMPONENTS_PERMISSION,

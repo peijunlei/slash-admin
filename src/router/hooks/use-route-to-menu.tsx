@@ -19,7 +19,7 @@ export function useRouteToMenuFn() {
       return items
         .filter((item) => !item.meta?.hideMenu)
         .map((item) => {
-          const menuItem: any = [];
+          const menuItem: any = {};
           const { meta, children } = item;
           if (meta) {
             const { key, label, icon, disabled, suffix } = meta;
@@ -50,6 +50,7 @@ export function useRouteToMenuFn() {
           if (children) {
             menuItem.children = routeToMenuFn(children);
           }
+          console.log(menuItem);
           return menuItem as ItemType;
         });
     },
