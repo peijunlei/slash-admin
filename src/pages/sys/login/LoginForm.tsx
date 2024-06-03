@@ -21,10 +21,10 @@ function LoginForm() {
 
   if (loginState !== LoginStateEnum.LOGIN) return null;
 
-  const handleFinish = async ({ username, password }: SignInReq) => {
+  const handleFinish = async ({ email, password }: SignInReq) => {
     setLoading(true);
     try {
-      await signIn({ username, password });
+      await signIn({ email, password });
     } finally {
       setLoading(false);
     }
@@ -36,7 +36,6 @@ function LoginForm() {
         name="login"
         size="large"
         initialValues={{
-          remember: true,
           username: DEFAULT_USER.username,
           password: DEFAULT_USER.password,
         }}
@@ -74,7 +73,7 @@ function LoginForm() {
         </div>
 
         <Form.Item
-          name="username"
+          name="email"
           rules={[{ required: true, message: t('sys.login.accountPlaceholder') }]}
         >
           <Input placeholder={t('sys.login.userName')} />

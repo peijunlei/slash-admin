@@ -83,12 +83,15 @@
       "closeRight": "Close Right"
     },
     "menu": {
+      "仪表": "Dashboard",
+      "工作台": "Workbench",
+      "分析页": "Analysis",
       "dashboard": "Dashboard",
       "workbench": "Workbench",
       "analysis": "Analysis",
       "management": "Management",
-      "goods": "goods",
-      "goods-list": "goods-list",
+      "customer": "customer",
+      "goods-list": "customer-list",
       "user": {
         "index": "User",
         "profile": "Profile",
@@ -141,5 +144,6 @@
         "500": "500"
       }
     }
-  }
+  },
+  "登录成功": "Login successful"
 }

@@ -3,22 +3,26 @@ import axios, { AxiosRequestConfig, AxiosError, AxiosResponse } from 'axios';
 import { isEmpty } from 'ramda';
 
 import { t } from '@/locales/i18n';
+import { getItem } from '@/utils/storage';
 
 import { Result } from '#/api';
-import { ResultEnum } from '#/enum';
+import { ResultEnum, StorageEnum } from '#/enum';
 
 // 创建 axios 实例
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API as string,
   timeout: 50000,
-  headers: { 'Content-Type': 'application/json;charset=utf-8' },
+  headers: {
+    'Content-Type': 'application/json;charset=utf-8',
+  },
 });
 
 // 请求拦截
 axiosInstance.interceptors.request.use(
   (config) => {
+    const token = (getItem(StorageEnum.Token) as any).accessToken;
     // 在请求被发送之前做些什么
-    config.headers.Authorization = 'Bearer Token';
+    config.headers.Authorization = `Bearer ${token}`;
     return config;
   },
   (error) => {
@@ -32,9 +36,9 @@ axiosInstance.interceptors.response.use(
   (res: AxiosResponse<Result>) => {
     if (!res.data) throw new Error(t('sys.api.apiRequestFailed'));
 
-    const { status, data, message } = res.data;
+    const { code, data, message } = res.data;
     // 业务请求成功
-    const hasSuccess = data && Reflect.has(res.data, 'status') && status === ResultEnum.SUCCESS;
+    const hasSuccess = data && Reflect.has(res.data, 'code') && code === ResultEnum.SUCCESS;
     if (hasSuccess) {
       return data;
     }

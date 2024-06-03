@@ -82,12 +82,15 @@
       "closeRight": "关闭右侧标签页"
     },
     "menu": {
+      "仪表": "仪表",
+      "工作台": "工作台",
+      "分析": "分析",
       "dashboard": "仪表",
       "workbench": "工作台",
       "analysis": "分析",
       "management": "管理",
-      "goods": "商品",
-      "goods-list": "商品列表",
+      "customer": "客户管理",
+      "customer-list": "客户列表",
       "user": {
         "index": "用户",
         "profile": "个人资料",

@@ -8,7 +8,8 @@ export interface UserToken {
 export interface UserInfo {
   id: string;
   email: string;
-  username: string;
+  phone?: string;
+  username?: string;
   password?: string;
   avatar?: string;
   role?: Role;
@@ -28,16 +29,22 @@ export interface Organization {
 export interface Permission {
   id: string;
   parentId: string;
-  name: string;
+  name?: string;
   label: string;
   type: PermissionType;
   route: string;
-  status?: BasicStatus;
+  /**
+   * 是否禁用
+   */
+  disabled?: boolean;
   order?: number;
   icon?: string;
   component?: string;
   hide?: boolean;
   frameSrc?: string;
+  /**
+   * 是否是新功能 会在菜单上显示一个 new 标签
+   */
   newFeature?: boolean;
   children?: Permission[];
 }

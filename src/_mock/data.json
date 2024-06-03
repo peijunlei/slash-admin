@@ -1,0 +1,41 @@
+[
+  {
+    "parentId": "",
+    "id": "1",
+    "label": "仪表",
+    "type": 0,
+    "route": "dashboard",
+    "icon": "ic-analysis",
+    "order": 1
+  },
+  {
+    "parentId": "1",
+    "id": "1-1",
+    "label": "工作台",
+    "route": "workbench",
+    "type": 1
+  },
+  {
+    "parentId": "1",
+    "id": "1-2",
+    "label": "分析",
+    "route": "analysis",
+    "type": 1
+  },
+  {
+    "parentId": "",
+    "id": "2",
+    "label": "客户管理",
+    "type": 0,
+    "route": "customer",
+    "icon": "ic-customer",
+    "order": 2
+  },
+  {
+    "parentId": "2",
+    "id": "2-1",
+    "label": "客户列表",
+    "route": "customer-list",
+    "type": 1
+  }
+]

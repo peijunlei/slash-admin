@@ -7,6 +7,7 @@ import { create } from 'zustand';
 
 import userService, { SignInReq } from '@/api/services/userService';
 import { getItem, removeItem, setItem } from '@/utils/storage';
+import { arrayToTree } from '@/utils/tree';
 
 import { UserInfo, UserToken } from '#/entity';
 import { StorageEnum } from '#/enum';
@@ -56,25 +57,27 @@ export const useSignIn = () => {
   const { setUserToken, setUserInfo } = useUserActions();
 
   const signInMutation = useMutation(userService.signin);
+  const getMenus = useMutation(userService.getMenus);
 
   const signIn = async (data: SignInReq) => {
     try {
-      const res = await signInMutation.mutateAsync(data);
-      const { user, accessToken, refreshToken } = res;
-      setUserToken({ accessToken, refreshToken });
-      setUserInfo(user);
+      const res = await Promise.all([signInMutation.mutateAsync(data), getMenus.mutateAsync()]);
+      const { token, userInfo } = res[0];
+      const { list } = res[1];
+      const treeData = arrayToTree(list);
+      userInfo.permissions = treeData;
+      setUserToken({ accessToken: token, refreshToken: '123' });
+      setUserInfo(userInfo);
+
       navigatge(HOMEPAGE, { replace: true });
 
       notification.success({
-        message: t('sys.login.loginSuccessTitle'),
-        description: `${t('sys.login.loginSuccessDesc')}: ${data.username}`,
+        message: t('登录成功'),
+        description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.email}`,
         duration: 3,
       });
     } catch (err) {
-      message.warning({
-        content: err.message,
-        duration: 3,
-      });
+      message.error(err.message);
     }
   };
 

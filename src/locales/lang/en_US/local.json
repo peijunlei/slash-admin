@@ -1,0 +1,16 @@
+{
+  "手机号": "Phone",
+  "邮箱": "Email",
+  "查看": "View",
+  "搜索": "Search",
+  "重置": "Reset",
+  "操作": "Operation",
+  "仪表": "Dashboard",
+  "工作台": "Workbench",
+  "分析": "Analysis",
+  "客户管理": "Customer",
+  "客户列表": "Customer List",
+  "操作成功": "Operation Success",
+  "操作失败": "Operation Failed",
+  "登录成功": "Login Success"
+}

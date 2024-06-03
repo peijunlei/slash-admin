@@ -4,8 +4,8 @@ export enum BasicStatus {
 }
 
 export enum ResultEnum {
-  SUCCESS = 0,
-  ERROR = -1,
+  SUCCESS = 'K-000000',
+  FAIL = 'K-000001',
   TIMEOUT = 401,
 }
 
@@ -22,8 +22,17 @@ export enum ThemeMode {
 }
 
 export enum ThemeLayout {
+  /**
+   * 垂直布局
+   */
   Vertical = 'vertical',
+  /**
+   * 水平布局
+   */
   Horizontal = 'horizontal',
+  /**
+   * 迷你布局
+   */
   Mini = 'mini',
 }
 

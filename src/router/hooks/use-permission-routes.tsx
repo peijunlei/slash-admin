@@ -9,7 +9,7 @@ import ProTag from '@/theme/antd/components/tag';
 import { flattenTrees } from '@/utils/tree';
 
 import { Permission } from '#/entity';
-import { BasicStatus, PermissionType } from '#/enum';
+import { PermissionType } from '#/enum';
 import { AppRouteObject } from '#/router';
 
 // 使用 import.meta.glob 获取所有路由组件
@@ -27,6 +27,7 @@ export function usePermissionRoutes() {
   const permissions = useUserPermission();
 
   return useMemo(() => {
+    // 将权限树扁平化
     const flattenedPermissions = flattenTrees(permissions!);
     const permissionRoutes = transformPermissionToMenuRoutes(
       permissions || [],
@@ -53,21 +54,20 @@ function transformPermissionToMenuRoutes(
       icon,
       order,
       hide,
-      status,
+      disabled,
       frameSrc,
       newFeature,
       component,
       parentId,
       children = [],
     } = permission;
-
     const appRoute: AppRouteObject = {
       path: route,
       meta: {
         label,
         key: getCompleteRoute(permission, flattenedPermissions),
         hideMenu: !!hide,
-        disabled: status === BasicStatus.DISABLE,
+        disabled,
       },
     };
 
@@ -83,6 +83,7 @@ function transformPermissionToMenuRoutes(
 
     if (type === PermissionType.CATALOGUE) {
       appRoute.meta!.hideTab = true;
+      // 如果是顶级路由，直接渲染子路由
       if (!parentId) {
         appRoute.element = (
           <Suspense fallback={<CircleLoading />}>
@@ -92,12 +93,14 @@ function transformPermissionToMenuRoutes(
       }
       appRoute.children = transformPermissionToMenuRoutes(children, flattenedPermissions);
       if (!isEmpty(children)) {
+        // 如果有子路由，将第一个子路由作为父路由的默认路由
         appRoute.children.unshift({
           index: true,
           element: <Navigate to={children[0].route} replace />,
         });
       }
     } else if (type === PermissionType.MENU) {
+      // 如果是菜单路由，渲染对应的组件 懒加载
       const Element = lazy(resolveComponent(component!) as any);
       if (frameSrc) {
         appRoute.element = <Element src={frameSrc} />;

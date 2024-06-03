@@ -50,7 +50,6 @@ export function useRouteToMenuFn() {
           if (children) {
             menuItem.children = routeToMenuFn(children);
           }
-          console.log(menuItem);
           return menuItem as ItemType;
         });
     },

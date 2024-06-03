@@ -193,7 +193,7 @@ export default function SettingButton() {
           {/* theme layout */}
           <div>
             <div className="mb-3 text-base font-semibold" style={{ color: colorTextSecondary }}>
-              Layout
+              布局
             </div>
             <div className="grid grid-cols-3 gap-4">
               <Card

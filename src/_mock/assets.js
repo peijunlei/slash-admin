@@ -2,28 +2,6 @@ import { faker } from '@faker-js/faker';
 
 import { BasicStatus, PermissionType } from '#/enum';
 
-const CUSTOMER_LIST = {
-  id: '0',
-  parentId: '',
-  label: 'sys.menu.goods',
-  name: 'goods',
-  icon: 'ic-analysis',
-  type: PermissionType.CATALOGUE,
-  route: 'goods',
-  order: 1,
-  children: [
-    {
-      id: '0-0',
-      parentId: '0',
-      label: 'sys.menu.goods-list',
-      name: 'goods-list',
-      type: PermissionType.MENU,
-      route: 'goods-list',
-      component: '/goods/goods-list/index.tsx',
-    },
-  ],
-};
-
 /**
  * Organization data mock
  */
@@ -67,10 +45,10 @@ export const ORG_LIST = [
 ];
 
 /**
- * User permission mock
+ *  工作台路由
  */
-const DASHBOARD_PERMISSION = {
-  id: '9100714781927703',
+const DASHBOARD_ROUTER = {
+  id: '0',
   parentId: '',
   label: 'sys.menu.dashboard',
   name: 'Dashboard',
@@ -80,8 +58,8 @@ const DASHBOARD_PERMISSION = {
   order: 1,
   children: [
     {
-      id: '8426999229400979',
-      parentId: '9100714781927703',
+      id: '0-1',
+      parentId: '0',
       label: 'sys.menu.workbench',
       name: 'Workbench',
       type: PermissionType.MENU,
@@ -89,13 +67,39 @@ const DASHBOARD_PERMISSION = {
       component: '/dashboard/workbench/index.tsx',
     },
     {
-      id: '9710971640510357',
-      parentId: '9100714781927703',
+      id: '0-2',
+      parentId: '0',
       label: 'sys.menu.analysis',
       name: 'Analysis',
       type: PermissionType.MENU,
       route: 'analysis',
       component: '/dashboard/analysis/index.tsx',
+    },
+  ],
+};
+
+/**
+ * 客户列表路由
+ */
+const CUSTOMER_ROUTER = {
+  id: '1',
+  parentId: '',
+  label: 'sys.menu.customer',
+  name: 'customer',
+  icon: 'ic-customer',
+  type: PermissionType.CATALOGUE,
+  route: 'customer',
+  order: 2,
+  children: [
+    {
+      id: '1-0',
+      parentId: '1',
+      label: 'sys.menu.customer-list',
+      name: 'customer-list',
+      type: PermissionType.MENU,
+      route: 'customer-list',
+      disabled: false,
+      component: '/customer/customer-list/index.tsx',
     },
   ],
 };
@@ -397,7 +401,7 @@ const ERRORS_PERMISSION = {
     },
   ],
 };
-const OTHERS_PERMISSION = [
+const OTHERS_ROUTER = [
   {
     id: '3981225257359246',
     parentId: '',
@@ -418,81 +422,9 @@ const OTHERS_PERMISSION = [
     route: 'kanban',
     component: '/sys/others/kanban/index.tsx',
   },
-  {
-    id: '5455837930804461',
-    parentId: '',
-    label: 'sys.menu.disabled',
-    name: 'Disabled',
-    icon: 'ic_disabled',
-    type: PermissionType.MENU,
-    route: 'disabled',
-    status: BasicStatus.DISABLE,
-    component: '/sys/others/calendar/index.tsx',
-  },
-  {
-    id: '7728048658221587',
-    parentId: '',
-    label: 'sys.menu.label',
-    name: 'Label',
-    icon: 'ic_label',
-    type: PermissionType.MENU,
-    route: 'label',
-    newFeature: true,
-    component: '/sys/others/blank.tsx',
-  },
-  {
-    id: '5733704222120995',
-    parentId: '',
-    label: 'sys.menu.frame',
-    name: 'Frame',
-    icon: 'ic_external',
-    type: PermissionType.CATALOGUE,
-    route: 'frame',
-    children: [
-      {
-        id: '9884486809510480',
-        parentId: '5733704222120995',
-        label: 'sys.menu.external_link',
-        name: 'External Link',
-        type: PermissionType.MENU,
-        route: 'external_link',
-        component: '/sys/others/iframe/external-link.tsx',
-        frameSrc: 'https://ant.design/',
-      },
-      {
-        id: '9299640886731819',
-        parentId: '5733704222120995',
-        label: 'sys.menu.iframe',
-        name: 'Iframe',
-        type: PermissionType.MENU,
-        route: 'frame',
-        component: '/sys/others/iframe/index.tsx',
-        frameSrc: 'https://ant.design/',
-      },
-    ],
-  },
-  {
-    id: '0941594969900756',
-    parentId: '',
-    label: 'sys.menu.blank',
-    name: 'Disabled',
-    icon: 'ic_blank',
-    type: PermissionType.MENU,
-    route: 'blank',
-    component: '/sys/others/blank.tsx',
-  },
 ];
 
-export const PERMISSION_LIST = [
-  CUSTOMER_LIST,
-  DASHBOARD_PERMISSION,
-  MANAGEMENT_PERMISSION,
-  COMPONENTS_PERMISSION,
-  FUNCTIONS_PERMISSION,
-  MENU_LEVEL_PERMISSION,
-  ERRORS_PERMISSION,
-  ...OTHERS_PERMISSION,
-];
+export const PERMISSION_LIST = [DASHBOARD_ROUTER, CUSTOMER_ROUTER];
 
 /**
  * User role mock
@@ -513,7 +445,7 @@ const TEST_ROLE = {
   status: BasicStatus.ENABLE,
   order: 2,
   desc: 'test',
-  permission: [DASHBOARD_PERMISSION, COMPONENTS_PERMISSION, FUNCTIONS_PERMISSION],
+  permission: [DASHBOARD_ROUTER, COMPONENTS_PERMISSION, FUNCTIONS_PERMISSION],
 };
 export const ROLE_LIST = [ADMIN_ROLE, TEST_ROLE];
 
