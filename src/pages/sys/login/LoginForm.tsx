@@ -43,27 +43,14 @@ function LoginForm() {
       >
         <div className="mb-4 flex flex-col">
           <Alert
+            
             type="info"
             description={
               <div className="flex flex-col">
                 <div className="flex">
-                  <ProTag className="flex-shrink-0">Admin {t('sys.login.userName')}:</ProTag>
+                  <ProTag className="flex-shrink-0">Admin:</ProTag>
                   <strong className="ml-1" style={{ color: themeToken.colorInfoTextHover }}>
-                    <span>{DEFAULT_USER.username}</span>
-                  </strong>
-                </div>
-
-                <div className="flex">
-                  <ProTag className="flex-shrink-0">Test {t('sys.login.userName')}:</ProTag>
-                  <strong className="ml-1" style={{ color: themeToken.colorInfoTextHover }}>
-                    <span>{TEST_USER.username}</span>
-                  </strong>
-                </div>
-
-                <div>
-                  <ProTag className="flex-shrink-0">{t('sys.login.password')}:</ProTag>
-                  <strong className=" ml-1" style={{ color: themeToken.colorInfoTextHover }}>
-                    {DEFAULT_USER.password}
+                    <span>peijunlei084532@gmail.com</span>
                   </strong>
                 </div>
               </div>
