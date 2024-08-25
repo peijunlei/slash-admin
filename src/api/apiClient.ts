@@ -20,7 +20,7 @@ const axiosInstance = axios.create({
 // 请求拦截
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = (getItem(StorageEnum.Token) as any).accessToken;
+    const token = (getItem(StorageEnum.Token) as any)?.accessToken || '';
     // 在请求被发送之前做些什么
     config.headers.Authorization = `Bearer ${token}`;
     return config;

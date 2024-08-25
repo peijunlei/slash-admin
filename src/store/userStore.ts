@@ -61,14 +61,15 @@ export const useSignIn = () => {
 
   const signIn = async (data: SignInReq) => {
     try {
-      const res = await Promise.all([signInMutation.mutateAsync(data), getMenus.mutateAsync()]);
-      const { token, userInfo } = res[0];
-      const { list } = res[1];
-      const treeData = arrayToTree(list);
-      userInfo.permissions = treeData;
+      const loginRes = await signInMutation.mutateAsync(data);
+      const { token, userInfo } = loginRes;
       setUserToken({ accessToken: token, refreshToken: '123' });
+      const menuRes = await getMenus.mutateAsync();
+      const treeData = arrayToTree(menuRes.list);
+      console.log(treeData);
+      debugger;
+      userInfo.permissions = treeData;
       setUserInfo(userInfo);
-
       navigatge(HOMEPAGE, { replace: true });
 
       notification.success({
