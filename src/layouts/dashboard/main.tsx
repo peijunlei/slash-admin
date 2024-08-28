@@ -1,12 +1,12 @@
 import { Content } from 'antd/es/layout/layout';
-import { CSSProperties, forwardRef } from 'react';
+import { CSSProperties, Suspense, forwardRef } from 'react';
 import { Outlet } from 'react-router-dom';
 
+import { CircleLoading } from '@/components/loading';
 import { useSettings } from '@/store/settingStore';
 import { useResponsive } from '@/theme/hooks';
 
 import { NAV_WIDTH, NAV_COLLAPSED_WIDTH, HEADER_HEIGHT, MULTI_TABS_HEIGHT } from './config';
-import MultiTabs from './multi-tabs';
 
 import { ThemeLayout } from '#/enum';
 
@@ -40,7 +40,10 @@ const Main = forwardRef<HTMLDivElement, Props>(({ offsetTop = false }, ref) => {
           themeStretch ? '' : 'xl:max-w-screen-xl'
         }`}
       >
-        {multiTab ? <MultiTabs offsetTop={offsetTop} /> : <Outlet />}
+        {/* {multiTab ? <MultiTabs offsetTop={offsetTop} /> : <Outlet />} */}
+        <Suspense fallback={<CircleLoading />}>
+          <Outlet />
+        </Suspense>
       </div>
     </Content>
   );

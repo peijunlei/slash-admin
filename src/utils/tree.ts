@@ -24,11 +24,11 @@ export function arrayToTree<T extends Permission>(
     .filter((item) => item.parentId === parentId) // 过滤出父级
     .map((item) => {
       const children = arrayToTree(list, item.id, item.route);
-      if (children.length) {
-        return { ...item, children };
-      }
       if (route) {
         item.component = `/${route}/${item.route}/index.tsx`;
+      }
+      if (children.length > 0) {
+        return { ...item, children };
       }
       return item;
     });

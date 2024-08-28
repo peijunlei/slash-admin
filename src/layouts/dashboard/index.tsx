@@ -1,8 +1,7 @@
 import { useScroll } from 'framer-motion';
-import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
-import { CircleLoading } from '@/components/loading';
 import ProgressBar from '@/components/progress-bar';
 import { useSettings } from '@/store/settingStore';
 import { useThemeToken } from '@/theme/hooks';
@@ -71,7 +70,8 @@ function DashboardLayout() {
             'color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, background 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
         }}
       >
-        <Suspense fallback={<CircleLoading />}>{layout}</Suspense>
+        {/* <Suspense fallback={<CircleLoading />}>{layout}</Suspense> */}
+        {layout}
       </div>
     </StyleWrapper>
   );

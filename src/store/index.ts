@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+// devtools
+import { devtools } from 'zustand/middleware';
 
 type Store = {
   count: number;
@@ -9,13 +11,15 @@ type Store = {
   };
 };
 
-const useStore = create<Store>((set) => ({
-  count: 0,
-  actions: {
-    increment: () => set((state) => ({ count: state.count + 1 })),
-    decrement: () => set((state) => ({ count: state.count - 1 })),
-  },
-}));
+const useStore = create<Store>()(
+  devtools((set) => ({
+    count: 0,
+    actions: {
+      increment: () => set((state) => ({ count: state.count + 1 })),
+      decrement: () => set((state) => ({ count: state.count - 1 })),
+    },
+  })),
+);
 
 export const useCount = () => useStore((state) => state.count);
 export const useCountActions = () => useStore((state) => state.actions);

@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
 
 import userService, { SignInReq } from '@/api/services/userService';
 import { getItem, removeItem, setItem } from '@/utils/storage';
@@ -25,25 +26,27 @@ type UserStore = {
   };
 };
 
-const useUserStore = create<UserStore>((set) => ({
-  userInfo: getItem<UserInfo>(StorageEnum.User) || {},
-  userToken: getItem<UserToken>(StorageEnum.Token) || {},
-  actions: {
-    setUserInfo: (userInfo) => {
-      set({ userInfo });
-      setItem(StorageEnum.User, userInfo);
+const useUserStore = create<UserStore>()(
+  devtools((set) => ({
+    userInfo: getItem<UserInfo>(StorageEnum.User) || {},
+    userToken: getItem<UserToken>(StorageEnum.Token) || {},
+    actions: {
+      setUserInfo: (userInfo) => {
+        set({ userInfo });
+        setItem(StorageEnum.User, userInfo);
+      },
+      setUserToken: (userToken) => {
+        set({ userToken });
+        setItem(StorageEnum.Token, userToken);
+      },
+      clearUserInfoAndToken() {
+        set({ userInfo: {}, userToken: {} });
+        removeItem(StorageEnum.User);
+        removeItem(StorageEnum.Token);
+      },
     },
-    setUserToken: (userToken) => {
-      set({ userToken });
-      setItem(StorageEnum.Token, userToken);
-    },
-    clearUserInfoAndToken() {
-      set({ userInfo: {}, userToken: {} });
-      removeItem(StorageEnum.User);
-      removeItem(StorageEnum.Token);
-    },
-  },
-}));
+  })),
+);
 
 export const useUserInfo = () => useUserStore((state) => state.userInfo);
 export const useUserToken = () => useUserStore((state) => state.userToken);
@@ -66,8 +69,6 @@ export const useSignIn = () => {
       setUserToken({ accessToken: token, refreshToken: '123' });
       const menuRes = await getMenus.mutateAsync();
       const treeData = arrayToTree(menuRes.list);
-      console.log(treeData);
-      debugger;
       userInfo.permissions = treeData;
       setUserInfo(userInfo);
       navigatge(HOMEPAGE, { replace: true });

@@ -28,6 +28,9 @@ export default function AntdConfig({ children }: Props) {
   return (
     <ConfigProvider
       locale={language.antdLocal}
+      input={{
+        autoComplete: 'off',
+      }}
       theme={{
         token: { colorPrimary, ...customThemeTokenConfig, ...themeModeToken[themeMode].token },
         components: { ...customComponentConfig, ...themeModeToken[themeMode].components },

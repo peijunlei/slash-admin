@@ -4,10 +4,12 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import userService from '@/api/services/userService';
+import { useRouter } from '@/router/hooks';
 
-function CustomerList() {
+export default function CustomerList() {
   const { t } = useTranslation();
   const [form] = Form.useForm();
+  const { push } = useRouter();
   const { tableProps, search } = useAntdTable(getAllUsers, {
     defaultPageSize: 10,
     form,
@@ -37,20 +39,22 @@ function CustomerList() {
     },
     {
       title: t('操作'),
-      dataIndex: 'action',
       key: 'action',
-      render: () => <Button>{t('查看')}</Button>,
+      render: (row) => (
+        <Button onClick={() => push(`/customer/customer-detail/${row.id}`)}>{t('查看')}</Button>
+      ),
     },
   ];
   useEffect(() => {}, []);
   return (
     <div>
-      <Form form={form} layout="inline">
+      {/* 垂直 */}
+      <Form form={form} layout="inline" style={{ marginBottom: 16 }}>
         <Form.Item label={t('手机号')} name="phone">
           <Input />
         </Form.Item>
         <Form.Item label={t('邮箱')} name="email">
-          <Input addonAfter=".com" />
+          <Input />
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" onClick={submit}>
@@ -65,4 +69,3 @@ function CustomerList() {
     </div>
   );
 }
-export default CustomerList;

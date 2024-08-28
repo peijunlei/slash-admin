@@ -14,7 +14,6 @@ import { AppRouteObject } from '#/router';
 
 // 使用 import.meta.glob 获取所有路由组件
 const pages = import.meta.glob('/src/pages/**/*.tsx');
-
 // 构建绝对路径的函数
 function resolveComponent(path: string) {
   return pages[`/src/pages${path}`];
@@ -25,7 +24,6 @@ function resolveComponent(path: string) {
  */
 export function usePermissionRoutes() {
   const permissions = useUserPermission();
-
   return useMemo(() => {
     // 将权限树扁平化
     const flattenedPermissions = flattenTrees(permissions!);
