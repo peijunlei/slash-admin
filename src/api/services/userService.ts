@@ -27,7 +27,7 @@ export enum UserApi {
   SignIn = '/users/login',
   SignUp = '/users/registerByCode',
   SendCode = '/users/sendCode',
-  Menus = '/menus',
+  Menus = '/menus/permission',
   Logout = '/auth/logout',
   Refresh = '/auth/refresh',
   User = '/user',

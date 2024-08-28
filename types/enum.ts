@@ -10,6 +10,7 @@ export enum ResultEnum {
 }
 
 export enum StorageEnum {
+  Menus = 'menus',
   User = 'user',
   Token = 'token',
   Settings = 'settings',
