@@ -4,19 +4,17 @@ import { useEffect, useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
 import TableActions from '@/components/table-actions';
-import { getItem } from '@/utils/storage';
+import { getAllMenus } from '@/utils';
 import { arrayToTree } from '@/utils/tree';
 
 import { fetchRoles, updateRole, addRole, delRole } from './api';
 import useStore from './store';
 
-import { StorageEnum } from '#/enum';
-
-const allMenus = (getItem(StorageEnum.Menus) as any[]) || [];
+const allMenus = getAllMenus();
 
 export default function IndexPage() {
   const allChildKeys = useMemo(() => {
-    const arr = allMenus.filter((v) => v.type === 1).map((v) => v.id);
+    const arr = allMenus.filter((v) => v.type !== 0).map((v) => v.id);
     return arr;
   }, []);
   const treeData = useMemo(() => {
@@ -47,7 +45,6 @@ export default function IndexPage() {
         message.error('请选择菜单权限');
         return;
       }
-      console.log('values', values, allKeys);
       const newValue = { ...values, menus: allKeys };
       newValue.id ? await updateRole(newValue.id, newValue) : await addRole(newValue);
       setAddVisible(false);
@@ -121,9 +118,11 @@ export default function IndexPage() {
       <Modal
         title="添加角色"
         open={addVisible}
+        maskClosable={false}
         onOk={() => handleOK()}
         onCancel={() => {
           setAddVisible(false);
+          setCheckedKeys([]);
         }}
       >
         <Form form={form}>

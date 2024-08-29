@@ -32,6 +32,9 @@ export enum UserApi {
   Refresh = '/auth/refresh',
   User = '/user',
   AllUsers = '/users',
+  AddUser = '/users/add',
+  DelUser = '/users',
+  UpdateUser = '/users',
 }
 
 const signin = (data: SignInReq) => apiClient.post<SignInRes>({ url: UserApi.SignIn, data });
@@ -40,11 +43,17 @@ const sendCode = (email: string) => apiClient.post({ url: UserApi.SendCode, data
 const logout = () => apiClient.get({ url: UserApi.Logout });
 const getMenus = () => apiClient.get<{ list: any[]; total: number }>({ url: UserApi.Menus });
 const findById = (id: string) => apiClient.get<UserInfo[]>({ url: `${UserApi.User}/${id}` });
+
 const fetchAllUsers = (data: FetAllUsersReq) =>
   apiClient.get<{
     list: UserInfo[];
     total: number;
   }>({ url: UserApi.AllUsers, params: data });
+
+const addUser = (data: UserInfo) => apiClient.post({ url: UserApi.AddUser, data });
+const delUser = (id: string) => apiClient.delete({ url: `${UserApi.DelUser}/${id}` });
+const updateUser = (id: string, data: UserInfo) =>
+  apiClient.put({ url: `${UserApi.UpdateUser}/${id}`, data });
 export default {
   signin,
   signup,
@@ -53,4 +62,7 @@ export default {
   sendCode,
   getMenus,
   fetchAllUsers,
+  addUser,
+  delUser,
+  updateUser,
 };
