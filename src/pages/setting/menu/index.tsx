@@ -76,7 +76,8 @@ export default function IndexPage() {
   const [addVisible, setAddVisible] = useState(false);
   const [dataSource, setDataSource] = useState<Menu[]>([]);
   const [loading, setLoading] = useState(false);
-  const [record, setRecord] = useState();
+  const [record, setRecord] = useState<Menu>();
+  const [parentId, setParentId] = useState<string | undefined>(undefined);
   async function getTableData() {
     setLoading(true);
     const res = await menuService.fetchAllMenus();
@@ -112,6 +113,17 @@ export default function IndexPage() {
       key: 'action',
       render: (record) => (
         <TableActions>
+          {record.type !== 0 ? null : (
+            <Button
+              type="link"
+              onClick={() => {
+                setParentId(record.id);
+                setAddVisible(true);
+              }}
+            >
+              新增菜单
+            </Button>
+          )}
           <Button
             type="link"
             onClick={() => {
@@ -141,7 +153,7 @@ export default function IndexPage() {
       content: t('确定删除吗？'),
       onOk: async () => {
         await menuService.delMenu(id);
-        submit();
+        refresh();
       },
     });
   }
@@ -189,6 +201,7 @@ export default function IndexPage() {
       </DndContext>
 
       <AddModal
+        parentId={parentId}
         record={record}
         visible={addVisible}
         onOk={(values) => handleOK(values)}

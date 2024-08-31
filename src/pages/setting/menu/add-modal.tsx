@@ -8,11 +8,12 @@ import { Menu } from '#/entity';
 
 interface AddModalProps {
   visible: boolean;
-  record: any;
+  parentId?: string;
+  record?: Menu;
   onOk: (values: any) => Promise<void>;
   onCancel: () => void;
 }
-function AddModal({ visible, record, roles, onOk, onCancel }: AddModalProps) {
+function AddModal({ visible, record, parentId, onOk, onCancel }: AddModalProps) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
@@ -55,14 +56,22 @@ function AddModal({ visible, record, roles, onOk, onCancel }: AddModalProps) {
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 20 }}
         form={form}
-        initialValues={record || { type: MENU_TYPE_ENUM[0].value, order: 0 }}
-        disabled={!!record?.disabled}
+        initialValues={
+          record || {
+            type: parentId ? MENU_TYPE_ENUM[1].value : MENU_TYPE_ENUM[0].value,
+            order: 0,
+            parentId,
+          }
+        }
       >
         <Form.Item<Menu> name="id" noStyle>
           <Input type="hidden" />
         </Form.Item>
+        <Form.Item<Menu> name="parentId" noStyle>
+          <Input type="hidden" />
+        </Form.Item>
         <Form.Item<Menu> label={t('类型')} name="type">
-          <Radio.Group options={MENU_TYPE_ENUM} disabled={!!record?.id} />
+          <Radio.Group options={MENU_TYPE_ENUM} disabled={!!record?.id || !!parentId} />
         </Form.Item>
         <Form.Item<Menu>
           label={t('菜单名称')}
