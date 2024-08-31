@@ -147,9 +147,7 @@ export default function IndexPage() {
   }
   const onDragEnd = ({ active, over }: DragEndEvent) => {
     // 交换 active 和 over 的位置 order 字段
-    console.log(active, over);
     if (!over || active.id === over.id) return;
-    return;
     const activeIndex = dataSource.findIndex((i) => i.id === active.id);
     const overIndex = dataSource.findIndex((i) => i.id === over.id);
     setDataSource((prevState) => {
