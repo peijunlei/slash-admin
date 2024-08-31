@@ -56,5 +56,27 @@ export interface Role {
   status: BasicStatus;
   order?: number;
   desc?: string;
+  menus?: string[];
   permission?: Permission[];
+}
+
+export interface Menu {
+  newFeature?: boolean;
+  functionName?: null;
+  authUrl?: null;
+  authMethod?: null;
+  label: string;
+  route: string;
+  parentId?: string;
+  icon?: null;
+  type: number;
+  order: number;
+  path?: string;
+  hide?: boolean;
+  disabled?: boolean;
+  delflag: boolean;
+  createTime: Date;
+  updateTime: Date;
+  id: string;
+  menuId?: string;
 }

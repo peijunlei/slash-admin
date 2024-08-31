@@ -66,3 +66,7 @@ export enum PermissionType {
   MENU,
   BUTTON,
 }
+export enum MenuType {
+  CATALOGUE,
+  MENU,
+}

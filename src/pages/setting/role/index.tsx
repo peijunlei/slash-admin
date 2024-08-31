@@ -1,25 +1,27 @@
-import { useAntdTable } from 'ahooks';
+import { useAntdTable, useRequest } from 'ahooks';
 import { Button, Table, Form, Modal, Input, Row, message, Tree } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
+import menuService from '@/api/services/menuService';
 import TableActions from '@/components/table-actions';
-import { getAllMenus } from '@/utils';
-import { arrayToTree } from '@/utils/tree';
+import { arryToTree } from '@/utils';
 
 import { fetchRoles, updateRole, addRole, delRole } from './api';
 import useStore from './store';
 
-const allMenus = getAllMenus();
+import { Role } from '#/entity';
 
 export default function IndexPage() {
+  const { data } = useRequest(menuService.fetchAllMenus);
+  const { list: allMenus } = data || { list: [] };
   const allChildKeys = useMemo(() => {
     const arr = allMenus.filter((v) => v.type !== 0).map((v) => v.id);
     return arr;
-  }, []);
+  }, [allMenus]);
   const treeData = useMemo(() => {
-    return arrayToTree(allMenus);
-  }, []);
+    return arryToTree(allMenus);
+  }, [allMenus]);
   const [checkedKeys, setCheckedKeys] = useState([]);
   const [allKeys, setAllKeys] = useState([]);
   const { addVisible, record } = useStore(
@@ -126,7 +128,7 @@ export default function IndexPage() {
         }}
       >
         <Form form={form}>
-          <Form.Item name="id">
+          <Form.Item<Role> name="id">
             <Input type="hidden" />
           </Form.Item>
           <Form.Item
@@ -136,7 +138,7 @@ export default function IndexPage() {
           >
             <Input />
           </Form.Item>
-          <Form.Item label="菜单权限" name="menus" required>
+          <Form.Item<Role> label="菜单权限" name="menus" required>
             <Tree
               checkable
               defaultExpandAll
