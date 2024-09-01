@@ -37,3 +37,12 @@ export function treeToArry(data: any[] = [], childrenKey = 'children') {
   });
   return arr;
 }
+
+/**
+ * 获取随机 HSL 颜色
+ * @returns
+ */
+export function getRandomHslColor() {
+  const h = Math.floor(Math.random() * 360);
+  return `hsl(${h}, 100%, 50%)`;
+}

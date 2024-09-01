@@ -91,7 +91,6 @@ export default function IndexPage() {
       key: 'sort',
       width: 100,
       render: (record) => {
-        console.log(record);
         return record.type === 0 ? <DragHandle /> : null;
       },
     },

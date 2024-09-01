@@ -2,6 +2,7 @@ import { lazy } from 'react';
 import { Navigate, RouteObject, RouterProvider, createHashRouter } from 'react-router-dom';
 
 import DashboardLayout from '@/layouts/dashboard';
+import Demo1 from '@/pages/canvas/demo1';
 import { usePermissionRoutes } from '@/router/hooks';
 import { ErrorRoutes } from '@/router/routes/error-routes';
 
@@ -25,6 +26,19 @@ const ProfileSetting = lazy(() => import('@/pages/setting/profile'));
 const LoginRoute: AppRouteObject = {
   path: '/login',
   Component: lazy(() => import('@/pages/sys/login/Login')),
+};
+const CanvasRoutes: AppRouteObject = {
+  path: '/canvas',
+  children: [
+    {
+      index: true,
+      element: <Navigate to="demo1" replace />,
+    },
+    {
+      path: 'demo1',
+      element: <Demo1 />,
+    },
+  ],
 };
 const PAGE_NOT_FOUND_ROUTE: AppRouteObject = {
   path: '*',
@@ -112,8 +126,7 @@ export default function Router() {
     //   },
     // ],
   };
-
-  const routes = [LoginRoute, asyncRoutes, ErrorRoutes, PAGE_NOT_FOUND_ROUTE];
+  const routes = [LoginRoute, CanvasRoutes, asyncRoutes, ErrorRoutes, PAGE_NOT_FOUND_ROUTE];
 
   const router = createHashRouter(routes as unknown as RouteObject[]);
   return <RouterProvider router={router} />;
