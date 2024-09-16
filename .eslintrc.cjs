@@ -58,6 +58,8 @@ module.exports = {
     'no-case-declarations': 'off',
     'no-use-before-define': 'off',
     'no-param-reassign': 'off',
+    'no-nested-ternary': 'off',
+    'react/jsx-no-bind': 'off',
     'space-before-function-paren': 'off',
     'class-methods-use-this': 'off',
     'max-classes-per-file': 'off',

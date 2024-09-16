@@ -6,12 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
-import systemService from '@/api/services/systemService';
+import funcService from '@/api/services/funcService';
 import userService, { SignInReq } from '@/api/services/userService';
 import { getItem, removeItem, setItem } from '@/utils/storage';
 import { arrayToTree } from '@/utils/tree';
-
-import { useSystemActions } from './systemStore';
 
 import { UserInfo, UserToken } from '#/entity';
 import { StorageEnum } from '#/enum';
@@ -61,22 +59,19 @@ export const useSignIn = () => {
   const navigatge = useNavigate();
   const { notification, message } = App.useApp();
   const { setUserToken, setUserInfo } = useUserActions();
-  const { setMenus } = useSystemActions();
 
   const signInMutation = useMutation(userService.signin);
-  const getMenus = useMutation(userService.getMenus);
 
   const signIn = async (data: SignInReq) => {
     try {
       const loginRes = await signInMutation.mutateAsync(data);
       const { token, userInfo } = loginRes;
       setUserToken({ accessToken: token, refreshToken: '123' });
-      const menuRes = await getMenus.mutateAsync();
-
-      systemService.fetchAllMenus().then((res) => {
-        setMenus(res.list);
-      });
-
+      const [menuRes, funcRes] = await Promise.all([
+        userService.fetchMenuPermissions(),
+        funcService.fetchFuncPermissions(),
+      ]);
+      setItem(StorageEnum.FUNC_CODES, funcRes);
       const treeData = arrayToTree(menuRes.list);
       userInfo.permissions = treeData;
       setUserInfo(userInfo);

@@ -2,11 +2,18 @@ import { MenuType } from '#/enum';
 
 export const MENU_TYPE_ENUM = [
   {
-    label: '目录',
-    value: MenuType.CATALOGUE,
+    label: '一级菜单',
+    value: MenuType.FIRST_MENU,
   },
   {
-    label: '菜单',
-    value: MenuType.MENU,
+    label: '二级菜单',
+    value: MenuType.SECOND_MENU,
   },
 ];
+
+export const MENU_TYPE_MAP = {
+  [MenuType.FIRST_MENU]: '菜单',
+  [MenuType.SECOND_MENU]: '菜单',
+  [MenuType.FUNC]: '功能',
+  [MenuType.AUTH]: '权限',
+};

@@ -1,10 +1,11 @@
 import { useAntdTable, useRequest } from 'ahooks';
-import { Button, Table, Form, Modal, Input, Row, message, Tree } from 'antd';
+import { Button, Table, Form, Modal, Input, Row, message } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
 import menuService from '@/api/services/menuService';
 import TableActions from '@/components/table-actions';
+import { useRouter } from '@/router/hooks';
 import { arryToTree } from '@/utils';
 
 import { fetchRoles, updateRole, addRole, delRole } from './api';
@@ -13,6 +14,7 @@ import useStore from './store';
 import { Role } from '#/entity';
 
 export default function IndexPage() {
+  const { push } = useRouter();
   const { data } = useRequest(menuService.fetchAllMenus);
   const { list: allMenus } = data || { list: [] };
   const allChildKeys = useMemo(() => {
@@ -79,7 +81,7 @@ export default function IndexPage() {
         return (
           <TableActions>
             <Button
-              type="dashed"
+              type="link"
               onClick={() => {
                 setAddVisible(true);
                 const keys = row.menus.filter((v) => allChildKeys.includes(v));
@@ -94,7 +96,15 @@ export default function IndexPage() {
             >
               编辑
             </Button>
-            <Button type="dashed" danger onClick={() => handleDel(row.id)}>
+            <Button
+              type="link"
+              onClick={() => {
+                push(`/setting/role-auth/${row.id}`);
+              }}
+            >
+              设置权限
+            </Button>
+            <Button type="link" danger onClick={() => handleDel(row.id)}>
               删除
             </Button>
           </TableActions>
@@ -118,7 +128,7 @@ export default function IndexPage() {
       </Row>
       <Table rowKey="id" columns={columns} {...tableProps} />
       <Modal
-        title="添加角色"
+        title={record?.id ? '编辑' : '新增'}
         open={addVisible}
         maskClosable={false}
         onOk={() => handleOK()}
@@ -137,24 +147,6 @@ export default function IndexPage() {
             rules={[{ required: true, message: '请输入角色名称', whitespace: true }]}
           >
             <Input />
-          </Form.Item>
-          <Form.Item<Role> label="菜单权限" name="menus" required>
-            <Tree
-              checkable
-              defaultExpandAll
-              onCheck={(keys, e) => {
-                const newKeys = (keys as string[]).concat(e.halfCheckedKeys);
-                setCheckedKeys(keys);
-                setAllKeys(newKeys);
-              }}
-              checkedKeys={checkedKeys}
-              treeData={treeData}
-              fieldNames={{
-                key: 'id',
-                children: 'children',
-                title: 'label',
-              }}
-            />
           </Form.Item>
         </Form>
       </Modal>

@@ -10,6 +10,7 @@ export enum ResultEnum {
 }
 
 export enum StorageEnum {
+  FUNC_CODES = 'funcCodes',
   Menus = 'menus',
   User = 'user',
   Token = 'token',
@@ -65,8 +66,32 @@ export enum PermissionType {
   CATALOGUE,
   MENU,
   BUTTON,
+  AUTH,
 }
 export enum MenuType {
-  CATALOGUE,
-  MENU,
+  /**
+   * 一级菜单
+   */
+  FIRST_MENU,
+  /**
+   * 二级菜单
+   */
+  SECOND_MENU,
+
+  /**
+   * 功能
+   */
+  FUNC,
+
+  /**
+   * 权限
+   */
+  AUTH,
+}
+
+export enum ApiMethod {
+  GET = 'GET',
+  POST = 'POST',
+  PUT = 'PUT',
+  DELETE = 'DELETE',
 }

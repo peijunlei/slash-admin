@@ -1,6 +1,6 @@
 import apiClient from '../apiClient';
 
-import { Menu } from '#/entity';
+import { Func, Menu } from '#/entity';
 
 export enum MenuApi {
   Menus = '/menus',
@@ -8,6 +8,7 @@ export enum MenuApi {
   DelMenu = '/menus',
   UpdateMenu = '/menus',
   ExchangeOrder = '/menus/exchangeOrder',
+  MenuAuth = '/menuAuth',
 }
 const addMenu = (data: any) => apiClient.post({ url: MenuApi.AddMenu, data });
 const delMenu = (id: string) => apiClient.delete({ url: `${MenuApi.DelMenu}/${id}` });
@@ -21,10 +22,17 @@ const fetchAllMenus = () =>
 
 const exchangeOrder = (data: { id: string; targetId: string }) =>
   apiClient.post({ url: MenuApi.ExchangeOrder, data });
+
+const fetchMenuAuthList = () =>
+  apiClient.get<{
+    menus: Menu[];
+    funcs: Func[];
+  }>({ url: `${MenuApi.MenuAuth}` });
 export default {
   fetchAllMenus,
   addMenu,
   delMenu,
   updateMenu,
   exchangeOrder,
+  fetchMenuAuthList,
 };

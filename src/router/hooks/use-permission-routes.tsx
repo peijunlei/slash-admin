@@ -15,7 +15,12 @@ import { AppRouteObject } from '#/router';
 // 使用 import.meta.glob 获取所有路由组件
 const pages = import.meta.glob('/src/pages/**/*.tsx');
 // 构建绝对路径的函数
+function convertDynamicPathToStatic(path) {
+  // 使用正则表达式替换动态路径参数
+  return path.replace(/\/:[^/]+/, '');
+}
 function resolveComponent(path: string) {
+  path = convertDynamicPathToStatic(path);
   return pages[`/src/pages${path}`];
 }
 

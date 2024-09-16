@@ -3,7 +3,7 @@ import axios, { AxiosRequestConfig, AxiosError, AxiosResponse } from 'axios';
 import { isEmpty } from 'ramda';
 
 import { t } from '@/locales/i18n';
-import { getItem } from '@/utils/storage';
+import { getItem, removeItem } from '@/utils/storage';
 
 import { Result } from '#/api';
 import { ResultEnum, StorageEnum } from '#/enum';
@@ -47,19 +47,23 @@ axiosInstance.interceptors.response.use(
   },
   (error: AxiosError<Result>) => {
     const { response, message } = error || {};
-    let errMsg = '';
-    try {
-      errMsg = response?.data?.message || message;
-    } catch (error) {
-      throw new Error(error as unknown as string);
-    }
+    let errMsg = response?.data?.message || message;
     // 对响应错误做点什么
     if (isEmpty(errMsg)) {
-      // checkStatus
-      // errMsg = checkStatus(response.data.status);
       errMsg = t('sys.api.errorMessage');
     }
     Message.error(errMsg);
+    const status = response?.status;
+
+    switch (status) {
+      case 401:
+        // 跳转登录页
+        removeItem(StorageEnum.Token);
+        window.location.href = '/login';
+        break;
+      default:
+        break;
+    }
     return Promise.reject(error);
   },
 );

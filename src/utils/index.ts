@@ -6,11 +6,19 @@
  * @param parentIdKey
  * @returns
  */
-export function arryToTree(data: any[], parentId = null, id = 'id', parentIdKey = 'parentId') {
+export function arryToTree(
+  data: any[],
+  parentId = null,
+  id = 'id',
+  parentIdKey = 'parentId',
+  grade = 1,
+) {
   const arr: any[] = [];
   data.forEach((item) => {
     if (item[parentIdKey] === parentId) {
-      const children = arryToTree(data, item[id], id, parentIdKey);
+      // 为当前节点设置 grade
+      item.grade = grade;
+      const children = arryToTree(data, item[id], id, parentIdKey, grade + 1);
       if (children.length) {
         item.children = children;
       }

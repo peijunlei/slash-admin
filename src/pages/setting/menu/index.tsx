@@ -12,13 +12,16 @@ import { Button, Modal, Table, TableColumnsType, message } from 'antd';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import funcService from '@/api/services/funcService';
 import menuService from '@/api/services/menuService';
+import ApiSelectModal from '@/biz/api-select-modal';
 import TableActions from '@/components/table-actions';
 import { arryToTree } from '@/utils';
 
+import AddFuncModal from './add-func-modal';
 import AddModal from './add-modal';
 
-import { Menu } from '#/entity';
+import { Menu, MenuFunc } from '#/entity';
 import type { DragEndEvent } from '@dnd-kit/core';
 import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 
@@ -74,67 +77,103 @@ function Row(props: RowProps) {
 export default function IndexPage() {
   const { t } = useTranslation();
   const [addVisible, setAddVisible] = useState(false);
-  const [dataSource, setDataSource] = useState<Menu[]>([]);
+  const [funcVisible, setFuncVisible] = useState(false);
+  const [apiVisible, setApiVisible] = useState(false);
+  const [dataSource, setDataSource] = useState<MenuFunc[]>([]);
   const [loading, setLoading] = useState(false);
-  const [record, setRecord] = useState<Menu>();
+  const [record, setRecord] = useState<MenuFunc>();
   const [parentId, setParentId] = useState<string | undefined>(undefined);
+  const [menuId, setMenuId] = useState<string>('');
   async function getTableData() {
     setLoading(true);
-    const res = await menuService.fetchAllMenus();
-    const orderedList = res.list.sort((a, b) => a.order - b.order);
-    const list = arryToTree(orderedList);
+    const res = await menuService.fetchMenuAuthList();
+    const funcs = res.funcs.map((v) => ({
+      ...v,
+      parentId: v.menuId,
+      type: 2,
+      children: v.apiIds.length > 0 ? v.apiIds : undefined,
+    })) as unknown as Menu[];
+    const list = arryToTree(res.menus.concat(funcs));
     setDataSource(list);
     setLoading(false);
   }
-  const columns: TableColumnsType<Menu> = [
-    {
-      key: 'sort',
-      width: 100,
-      render: (record) => {
-        return record.type === 0 ? <DragHandle /> : null;
-      },
-    },
+  const columns: TableColumnsType<MenuFunc> = [
+    // {
+    //   key: 'sort',
+    //   width: 100,
+    //   render: (record) => {
+    //     return record.type === 0 ? <DragHandle /> : null;
+    //   },
+    // },
     {
       title: '菜单名称',
       dataIndex: 'label',
-    },
-    {
-      title: '路由',
-      dataIndex: 'route',
-    },
-    {
-      title: '图标',
-      dataIndex: 'icon',
-      render: (icon: string) => icon || '-',
+      render: (value, row) => {
+        if (row.apiName) {
+          return `${row.apiName}- ${row.method} - (${row.apiUrl})`;
+        }
+        return value || row.functionName || row.apiName;
+      },
     },
     {
       title: '操作',
       key: 'action',
-      render: (record) => (
+      dataIndex: 'action',
+      render: (v, row) => (
         <TableActions>
-          {record.type !== 0 ? null : (
+          {row.type === 0 && (
             <Button
               type="link"
               onClick={() => {
-                setParentId(record.id);
+                setParentId(row.id);
                 setAddVisible(true);
               }}
             >
               新增菜单
             </Button>
           )}
-          <Button
-            type="link"
-            onClick={() => {
-              setRecord(record);
-              setAddVisible(true);
-            }}
-          >
-            {t('编辑')}
-          </Button>
-          <Button type="link" danger onClick={() => handleDel(record.id)}>
-            {t('删除')}
-          </Button>
+          {row.type === 1 && (
+            <Button
+              type="link"
+              onClick={() => {
+                setMenuId(row.id);
+                setFuncVisible(true);
+              }}
+            >
+              新增功能
+            </Button>
+          )}
+          {row.type === 2 && (
+            <Button
+              type="link"
+              onClick={() => {
+                setRecord(row);
+                setApiVisible(true);
+              }}
+            >
+              关联接口
+            </Button>
+          )}
+          {[0, 1, 2].includes(row.type) && (
+            <>
+              <Button
+                type="link"
+                onClick={() => {
+                  setRecord(row);
+                  if (row.type === 2) {
+                    setFuncVisible(true);
+                  } else {
+                    setAddVisible(true);
+                  }
+                }}
+              >
+                {t('编辑')}
+              </Button>
+              <Button type="link" danger onClick={() => handleDel(row.id, row.type)}>
+                {t('删除')}
+              </Button>
+            </>
+          )}
         </TableActions>
       ),
     },
@@ -146,16 +185,34 @@ export default function IndexPage() {
     values.id ? await menuService.updateMenu(values.id, values) : await menuService.addMenu(values);
     refresh();
   }
-  async function handleDel(id) {
+  /**
+   * handleFuncOK
+   */
+  async function handleFuncOK(values: any) {
+    values.id ? await funcService.updateFunc(values.id, values) : await funcService.addFunc(values);
+    refresh();
+  }
+  async function handleDel(id, type) {
     Modal.confirm({
       title: t('删除'),
       content: t('确定删除吗？'),
       onOk: async () => {
-        await menuService.delMenu(id);
+        switch (type) {
+          case 0:
+          case 1:
+            await menuService.delMenu(id);
+            break;
+          case 2:
+            await funcService.delFunc(id);
+            break;
+          default:
+            break;
+        }
         refresh();
       },
     });
   }
+
   const onDragEnd = ({ active, over }: DragEndEvent) => {
     // 交换 active 和 over 的位置 order 字段
     if (!over || active.id === over.id) return;
@@ -195,6 +252,9 @@ export default function IndexPage() {
             columns={columns}
             dataSource={dataSource}
             pagination={false}
+            expandable={{
+              indentSize: 20,
+            }}
           />
         </SortableContext>
       </DndContext>
@@ -208,6 +268,28 @@ export default function IndexPage() {
           setAddVisible(false);
           setRecord(undefined);
         }}
+      />
+      <AddFuncModal
+        menuId={menuId}
+        record={record}
+        visible={funcVisible}
+        onOk={(values) => handleFuncOK(values)}
+        onCancel={() => {
+          setFuncVisible(false);
+          setMenuId('');
+        }}
+      />
+      <ApiSelectModal
+        visible={apiVisible}
+        onCancel={() => {
+          setApiVisible(false);
+        }}
+        onOk={async (keys) => {
+          await funcService.updateFunc(record?.id, { apiIds: keys });
+          message.success('操作成功');
+          refresh();
+        }}
+        selectKeys={record?.apiIds.map((i) => i.id)}
       />
     </div>
   );

@@ -4,12 +4,16 @@ import { useTranslation } from 'react-i18next';
 
 import { MENU_TYPE_ENUM } from '@/utils/constant';
 
-import { Menu } from '#/entity';
+import { MenuFunc } from '#/entity';
+import { MenuType } from '#/enum';
 
+interface Record extends MenuFunc {
+  isView?: boolean;
+}
 interface AddModalProps {
   visible: boolean;
   parentId?: string;
-  record?: Menu;
+  record?: Record;
   onOk: (values: any) => Promise<void>;
   onCancel: () => void;
 }
@@ -18,7 +22,7 @@ function AddModal({ visible, record, parentId, onOk, onCancel }: AddModalProps) 
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const handleOK = () => {
-    if (record?.disabled) {
+    if (record?.isView) {
       onCancel();
       return;
     }
@@ -40,17 +44,15 @@ function AddModal({ visible, record, parentId, onOk, onCancel }: AddModalProps) 
       form.resetFields();
     }
   }, [visible, form]);
-  if (!visible) return null; // Add this line
+  if (!visible) return null;
   return (
     <Modal
-      title={t('新增')}
+      title={record?.isView ? '查看' : record?.id ? '编辑' : '新增'}
       open={visible}
       maskClosable={false}
       confirmLoading={loading}
-      onOk={() => handleOK()}
-      onCancel={() => {
-        onCancel();
-      }}
+      onOk={handleOK}
+      onCancel={onCancel}
     >
       <Form
         labelCol={{ span: 4 }}
@@ -58,22 +60,22 @@ function AddModal({ visible, record, parentId, onOk, onCancel }: AddModalProps) 
         form={form}
         initialValues={
           record || {
-            type: parentId ? MENU_TYPE_ENUM[1].value : MENU_TYPE_ENUM[0].value,
+            type: parentId ? MenuType.SECOND_MENU : MenuType.FIRST_MENU,
             order: 0,
             parentId,
           }
         }
       >
-        <Form.Item<Menu> name="id" noStyle>
+        <Form.Item<Record> name="id" noStyle>
           <Input type="hidden" />
         </Form.Item>
-        <Form.Item<Menu> name="parentId" noStyle>
+        <Form.Item<Record> name="parentId" noStyle>
           <Input type="hidden" />
         </Form.Item>
-        <Form.Item<Menu> label={t('类型')} name="type">
+        <Form.Item<Record> label={t('类型')} name="type">
           <Radio.Group options={MENU_TYPE_ENUM} disabled={!!record?.id || !!parentId} />
         </Form.Item>
-        <Form.Item<Menu>
+        <Form.Item<Record>
           label={t('菜单名称')}
           name="label"
           rules={[
@@ -86,7 +88,7 @@ function AddModal({ visible, record, parentId, onOk, onCancel }: AddModalProps) 
         >
           <Input />
         </Form.Item>
-        <Form.Item<Menu>
+        <Form.Item<Record>
           label={t('路由')}
           name="route"
           rules={[{ required: true, whitespace: true }]}
@@ -98,14 +100,14 @@ function AddModal({ visible, record, parentId, onOk, onCancel }: AddModalProps) 
           shouldUpdate={(prevValues, currentValues) => prevValues.type !== currentValues.type}
         >
           {({ getFieldValue }) =>
-            getFieldValue('type') === 0 ? (
+            getFieldValue('type') === 0 && (
               <Form.Item label={t('图标')} name="icon">
                 <Input />
               </Form.Item>
-            ) : null
+            )
           }
         </Form.Item>
-        <Form.Item<Menu> label={t('排序')} name="order" rules={[{ required: true }]}>
+        <Form.Item<Record> label={t('排序')} name="order" rules={[{ required: true }]}>
           <InputNumber min={0} max={99} />
         </Form.Item>
       </Form>

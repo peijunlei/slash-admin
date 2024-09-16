@@ -62,9 +62,6 @@ export interface Role {
 
 export interface Menu {
   newFeature?: boolean;
-  functionName?: null;
-  authUrl?: null;
-  authMethod?: null;
   label: string;
   route: string;
   parentId?: string;
@@ -73,10 +70,20 @@ export interface Menu {
   order: number;
   path?: string;
   hide?: boolean;
-  disabled?: boolean;
-  delflag: boolean;
-  createTime: Date;
-  updateTime: Date;
   id: string;
-  menuId?: string;
 }
+export interface Func {
+  functionName: string;
+  functionCode: string;
+  order: number;
+  id: string;
+  menuId: string;
+}
+export interface Api {
+  apiName: string;
+  apiUrl: string;
+  method: string;
+  id: string;
+}
+
+export type MenuFunc = Menu & Func;

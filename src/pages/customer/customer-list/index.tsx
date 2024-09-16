@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import roleService from '@/api/services/roleService';
 import userService from '@/api/services/userService';
+import AuthWrapper from '@/components/AuthWrapper';
 import TableActions from '@/components/table-actions';
 import { useRouter } from '@/router/hooks';
 
@@ -75,6 +76,7 @@ export default function CustomerList() {
       render: (row) => (
         <TableActions>
           <Button
+            type="link"
             onClick={() => {
               setAddVisible(true);
               setRecord({
@@ -85,18 +87,22 @@ export default function CustomerList() {
           >
             {t('查看')}
           </Button>
-          <Button
-            type="dashed"
-            onClick={() => {
-              setRecord(row);
-              setAddVisible(true);
-            }}
-          >
-            {t('编辑')}
-          </Button>
-          <Button type="dashed" danger onClick={() => handleDel(row.id)}>
-            {t('删除')}
-          </Button>
+          <AuthWrapper funcCode="f_user_edit">
+            <Button
+              type="link"
+              onClick={() => {
+                setRecord(row);
+                setAddVisible(true);
+              }}
+            >
+              {t('编辑')}
+            </Button>
+          </AuthWrapper>
+          <AuthWrapper funcCode="f_user_del">
+            <Button type="link" danger onClick={() => handleDel(row.id)}>
+              {t('删除')}
+            </Button>
+          </AuthWrapper>
         </TableActions>
       ),
     },
@@ -110,7 +116,7 @@ export default function CustomerList() {
     getRoles();
   }, []);
   return (
-    <div>
+    <AuthWrapper funcCode="f_user_view">
       {/* 垂直 */}
       <Form form={form} layout="inline" style={{ marginBottom: 16 }}>
         <Form.Item label={t('手机号')} name="phone">
@@ -129,9 +135,11 @@ export default function CustomerList() {
         </Form.Item>
       </Form>
       <Row>
-        <Button type="primary" onClick={() => setAddVisible(true)}>
-          {t('新增')}
-        </Button>
+        <AuthWrapper funcCode="f_user_add">
+          <Button type="primary" onClick={() => setAddVisible(true)}>
+            {t('新增')}
+          </Button>
+        </AuthWrapper>
       </Row>
       <Table columns={columns} rowKey="id" {...tableProps} />
       <AddModal
@@ -144,6 +152,6 @@ export default function CustomerList() {
           setRecord(undefined);
         }}
       />
-    </div>
+    </AuthWrapper>
   );
 }

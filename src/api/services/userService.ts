@@ -27,7 +27,7 @@ export enum UserApi {
   SignIn = '/users/login',
   SignUp = '/users/registerByCode',
   SendCode = '/users/sendCode',
-  Menus = '/menus/permission',
+  Permission = '/menus/permission',
   Logout = '/auth/logout',
   Refresh = '/auth/refresh',
   User = '/user',
@@ -41,7 +41,8 @@ const signin = (data: SignInReq) => apiClient.post<SignInRes>({ url: UserApi.Sig
 const signup = (data: SignUpReq) => apiClient.post<SignInRes>({ url: UserApi.SignUp, data });
 const sendCode = (email: string) => apiClient.post({ url: UserApi.SendCode, data: { email } });
 const logout = () => apiClient.get({ url: UserApi.Logout });
-const getMenus = () => apiClient.get<{ list: any[]; total: number }>({ url: UserApi.Menus });
+const fetchMenuPermissions = () =>
+  apiClient.get<{ list: any[]; total: number }>({ url: UserApi.Permission });
 const findById = (id: string) => apiClient.get<UserInfo[]>({ url: `${UserApi.User}/${id}` });
 
 const fetchAllUsers = (data: FetAllUsersReq) =>
@@ -60,7 +61,7 @@ export default {
   findById,
   logout,
   sendCode,
-  getMenus,
+  fetchMenuPermissions,
   fetchAllUsers,
   addUser,
   delUser,
