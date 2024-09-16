@@ -4,5 +4,5 @@ import { StorageEnum } from '#/enum';
 
 export const checkAuth = (funcCode: string) => {
   const FUNC_CODES = getItem<string[]>(StorageEnum.FUNC_CODES) || [];
-  return true;
+  return FUNC_CODES.includes(funcCode);
 };
