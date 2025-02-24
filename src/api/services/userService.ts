@@ -23,18 +23,15 @@ interface FetAllUsersReq {
   email?: string;
   phone?: string;
 }
+const Users = '/users';
 export enum UserApi {
-  SignIn = '/users/login',
-  SignUp = '/users/registerByCode',
-  SendCode = '/users/sendCode',
+  SignIn = '/auth/login',
+  SignUp = '/auth/register',
+  SendCode = '/auth/sendCode',
   Permission = '/menus/permission',
   Logout = '/auth/logout',
   Refresh = '/auth/refresh',
   User = '/user',
-  AllUsers = '/users',
-  AddUser = '/users/add',
-  DelUser = '/users',
-  UpdateUser = '/users',
 }
 
 const signin = (data: SignInReq) => apiClient.post<SignInRes>({ url: UserApi.SignIn, data });
@@ -49,12 +46,11 @@ const fetchAllUsers = (data: FetAllUsersReq) =>
   apiClient.get<{
     list: UserInfo[];
     total: number;
-  }>({ url: UserApi.AllUsers, params: data });
+  }>({ url: Users, params: data });
 
-const addUser = (data: UserInfo) => apiClient.post({ url: UserApi.AddUser, data });
-const delUser = (id: string) => apiClient.delete({ url: `${UserApi.DelUser}/${id}` });
-const updateUser = (id: string, data: UserInfo) =>
-  apiClient.put({ url: `${UserApi.UpdateUser}/${id}`, data });
+const addUser = (data: UserInfo) => apiClient.post({ url: Users, data });
+const delUser = (id: string) => apiClient.delete({ url: `${Users}/${id}` });
+const updateUser = (id: string, data: UserInfo) => apiClient.put({ url: `${Users}/${id}`, data });
 export default {
   signin,
   signup,
