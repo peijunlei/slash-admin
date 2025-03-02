@@ -68,30 +68,29 @@ export enum PermissionType {
   BUTTON,
   AUTH,
 }
-export enum MenuType {
-  /**
-   * 一级菜单
-   */
-  FIRST_MENU,
-  /**
-   * 二级菜单
-   */
-  SECOND_MENU,
 
-  /**
-   * 功能
-   */
-  FUNC,
-
-  /**
-   * 权限
-   */
-  AUTH,
-}
-
+/** 接口方法 */
 export enum ApiMethod {
   GET = 'GET',
   POST = 'POST',
   PUT = 'PUT',
   DELETE = 'DELETE',
+}
+/** 用户身份 */
+export enum UserRole {
+  ADMIN = 'admin',
+  USER = 'user',
+  GUEST = 'guest',
+}
+/** 初始菜单类型 */
+export enum MenuType {
+  /**  一级菜单 */
+  FIRST_MENU = 0,
+  /**  二级菜单 */
+  SECOND_MENU = 1,
+}
+/** 扩展菜单类型 */
+export enum ExtraMenuType {
+  /**  功能 */
+  FUNCTION = 2,
 }

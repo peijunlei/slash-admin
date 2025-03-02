@@ -1,5 +1,6 @@
 import { useAntdTable } from 'ahooks';
-import { Button, Form, Input, Modal, Row, Select, Table, TableColumnsType } from 'antd';
+import { Button, Form, Input, Modal, Row, Select, Table } from 'antd';
+import { ColumnType } from 'antd/es/table';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,14 +10,13 @@ import TableActions from '@/components/table-actions';
 
 import AddModal from './add-modal';
 
-import { Api } from '#/entity';
 import { ApiMethod } from '#/enum';
 
 export default function CustomerList() {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [addVisible, setAddVisible] = useState(false);
-  const [record, setRecord] = useState();
+  const [record, setRecord] = useState<IApi>();
 
   const { tableProps, search } = useAntdTable(getTableData, {
     defaultPageSize: 10,
@@ -40,7 +40,7 @@ export default function CustomerList() {
     values.id ? await apiService.updateApi(values.id, values) : await apiService.addApi(values);
     submit();
   }
-  async function handleDel(id) {
+  async function handleDel(id: string) {
     Modal.confirm({
       title: t('删除'),
       content: t('确定删除吗？'),
@@ -50,7 +50,7 @@ export default function CustomerList() {
       },
     });
   }
-  const columns: TableColumnsType<Api> = [
+  const columns: ColumnType<IApi>[] = [
     {
       title: '接口名称',
       dataIndex: 'apiName',
@@ -66,7 +66,7 @@ export default function CustomerList() {
     {
       title: t('操作'),
       key: 'action',
-      render: (row) => (
+      render: (_, row) => (
         <TableActions>
           <Button
             type="link"
@@ -74,13 +74,14 @@ export default function CustomerList() {
               setAddVisible(true);
               setRecord({
                 ...row,
+                // @ts-ignore
                 disabled: true,
               });
             }}
           >
             {t('查看')}
           </Button>
-          <AuthWrapper funcCode="f_user_edit">
+          <AuthWrapper funcCode="f_api_edit">
             <Button
               type="link"
               onClick={() => {
@@ -91,7 +92,7 @@ export default function CustomerList() {
               {t('编辑')}
             </Button>
           </AuthWrapper>
-          <AuthWrapper funcCode="f_user_del">
+          <AuthWrapper funcCode="f_api_del">
             <Button type="link" danger onClick={() => handleDel(row.id)}>
               {t('删除')}
             </Button>
@@ -102,7 +103,7 @@ export default function CustomerList() {
   ];
   useEffect(() => {}, []);
   return (
-    <AuthWrapper funcCode="f_user_view">
+    <AuthWrapper funcCode="f_api_view">
       {/* 垂直 */}
       <Form
         form={form}
@@ -112,16 +113,17 @@ export default function CustomerList() {
           method: null,
         }}
       >
-        <Form.Item<Api> label="接口名称" name="apiName">
+        <Form.Item<IApi> label="接口名称" name="apiName">
           <Input />
         </Form.Item>
-        <Form.Item<Api> label="接口地址" name="apiUrl">
+        <Form.Item<IApi> label="接口地址" name="apiUrl">
           <Input />
         </Form.Item>
-        <Form.Item<Api> label="请求方式" name="method">
+        <Form.Item<IApi> label="请求方式" name="method">
           <Select
             placeholder="请选择请求方式"
             style={{ width: 120 }}
+            allowClear
             options={[
               { label: 'GET', value: ApiMethod.GET },
               { label: 'POST', value: ApiMethod.POST },
@@ -140,7 +142,7 @@ export default function CustomerList() {
         </Form.Item>
       </Form>
       <Row>
-        <AuthWrapper funcCode="f_user_add">
+        <AuthWrapper funcCode="f_api_add">
           <Button type="primary" onClick={() => setAddVisible(true)}>
             {t('新增')}
           </Button>

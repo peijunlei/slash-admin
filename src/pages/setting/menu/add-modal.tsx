@@ -2,9 +2,8 @@ import { Form, Input, InputNumber, Modal, Radio } from 'antd';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { MENU_TYPE_ENUM } from '@/utils/constant';
+import { MENU_TYPE_ENUM } from './type';
 
-import { MenuFunc } from '#/entity';
 import { MenuType } from '#/enum';
 
 interface Record extends MenuFunc {

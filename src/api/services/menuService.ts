@@ -1,7 +1,5 @@
 import apiClient from '../apiClient';
 
-import { Func, Menu } from '#/entity';
-
 export enum MenuApi {
   Menus = '/menus',
   AddMenu = '/menus',
@@ -16,7 +14,7 @@ const updateMenu = (id: string, data: any) =>
   apiClient.put({ url: `${MenuApi.UpdateMenu}/${id}`, data });
 const fetchAllMenus = () =>
   apiClient.get<{
-    list: Menu[];
+    list: IMenu[];
     total: number;
   }>({ url: MenuApi.Menus });
 
@@ -25,8 +23,8 @@ const exchangeOrder = (data: { id: string; targetId: string }) =>
 
 const fetchMenuAuthList = () =>
   apiClient.get<{
-    menus: Menu[];
-    funcs: Func[];
+    menus: IMenu[];
+    funcs: IFunc[];
   }>({ url: `${MenuApi.MenuAuth}` });
 export default {
   fetchAllMenus,

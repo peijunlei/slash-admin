@@ -2,8 +2,6 @@ import { Form, Input, InputNumber, Modal } from 'antd';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Func, MenuFunc } from '#/entity';
-
 interface AddFuncModalProps {
   visible: boolean;
   menuId: string;
@@ -57,20 +55,20 @@ function AddFuncModal({ visible, menuId, record, onOk, onCancel }: AddFuncModalP
           }
         }
       >
-        <Form.Item<Func> name="id" noStyle>
+        <Form.Item<IFunc> name="id" noStyle>
           <Input type="hidden" />
         </Form.Item>
-        <Form.Item<Func> name="menuId" noStyle>
+        <Form.Item<IFunc> name="menuId" noStyle>
           <Input type="hidden" />
         </Form.Item>
-        <Form.Item<Func>
+        <Form.Item<IFunc>
           label={t('功能名称')}
           name="functionName"
           rules={[{ required: true, message: t('请输入功能名称') }]}
         >
           <Input />
         </Form.Item>
-        <Form.Item<Func>
+        <Form.Item<IFunc>
           label={t('功能编码')}
           name="functionCode"
           rules={[
@@ -81,7 +79,7 @@ function AddFuncModal({ visible, menuId, record, onOk, onCancel }: AddFuncModalP
           <Input />
         </Form.Item>
 
-        <Form.Item<Func> label={t('排序')} name="order" rules={[{ required: true }]}>
+        <Form.Item<IFunc> label={t('排序')} name="order" rules={[{ required: true }]}>
           <InputNumber min={0} max={99} />
         </Form.Item>
       </Form>

@@ -1,23 +1,21 @@
 import { useAntdTable } from 'ahooks';
 import { Button, Form, Input, Modal, Row, Table } from 'antd';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import roleService from '@/api/services/roleService';
 import userService from '@/api/services/userService';
 import AuthWrapper from '@/components/AuthWrapper';
 import TableActions from '@/components/table-actions';
-import { useRouter } from '@/router/hooks';
 
 import AddModal from './add-modal';
+
+import type { TableProps } from 'antd';
 
 export default function CustomerList() {
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const { push } = useRouter();
   const [addVisible, setAddVisible] = useState(false);
-  const [record, setRecord] = useState();
-  const [roles, setRoles] = useState([]);
+  const [record, setRecord] = useState<IUser>();
 
   const { tableProps, search } = useAntdTable(getAllUsers, {
     defaultPageSize: 10,
@@ -41,7 +39,7 @@ export default function CustomerList() {
     values.id ? await userService.updateUser(values.id, values) : await userService.addUser(values);
     submit();
   }
-  async function handleDel(id) {
+  async function handleDel(id: string) {
     Modal.confirm({
       title: t('删除'),
       content: t('确定删除吗？'),
@@ -51,7 +49,7 @@ export default function CustomerList() {
       },
     });
   }
-  const columns = [
+  const columns: TableProps<IUser>['columns'] = [
     {
       title: t('手机号'),
       dataIndex: 'phone',
@@ -62,59 +60,58 @@ export default function CustomerList() {
     },
     {
       title: t('角色'),
-      dataIndex: 'roleIds',
-      render: (roleIds) => {
-        const roleNames = roles
-          .filter((item) => roleIds.includes(item.id))
-          .map((item) => item.name);
-        return roleNames.join(',');
+      dataIndex: 'roles',
+      render: (roles: IUser['roles']) => {
+        return roles?.map((item) => item.name).join(',');
       },
+    },
+    {
+      title: t('身份'),
+      dataIndex: 'role',
     },
     {
       title: t('操作'),
       key: 'action',
-      render: (row) => (
-        <TableActions>
-          <Button
-            type="link"
-            onClick={() => {
-              setAddVisible(true);
-              setRecord({
-                ...row,
-                disabled: true,
-              });
-            }}
-          >
-            {t('查看')}
-          </Button>
-          <AuthWrapper funcCode="f_user_edit">
+      render: (_, row) => {
+        if (row.role === 'admin') {
+          return null;
+        }
+        return (
+          <TableActions>
             <Button
               type="link"
               onClick={() => {
-                setRecord(row);
                 setAddVisible(true);
+                setRecord({
+                  ...row,
+                  // @ts-ignore
+                  disabled: true,
+                });
               }}
             >
-              {t('编辑')}
+              {t('查看')}
             </Button>
-          </AuthWrapper>
-          <AuthWrapper funcCode="f_user_del">
-            <Button type="link" danger onClick={() => handleDel(row.id)}>
-              {t('删除')}
-            </Button>
-          </AuthWrapper>
-        </TableActions>
-      ),
+            <AuthWrapper funcCode="f_user_edit">
+              <Button
+                type="link"
+                onClick={() => {
+                  setRecord(row);
+                  setAddVisible(true);
+                }}
+              >
+                {t('编辑')}
+              </Button>
+            </AuthWrapper>
+            <AuthWrapper funcCode="f_user_del">
+              <Button type="link" danger onClick={() => handleDel(row.id)}>
+                {t('删除')}
+              </Button>
+            </AuthWrapper>
+          </TableActions>
+        );
+      },
     },
   ];
-  async function getRoles() {
-    // 获取角色列表
-    const res = await roleService.fetchAllRoles();
-    setRoles(res.list);
-  }
-  useEffect(() => {
-    getRoles();
-  }, []);
   return (
     <AuthWrapper funcCode="f_user_view">
       {/* 垂直 */}
@@ -143,7 +140,6 @@ export default function CustomerList() {
       </Row>
       <Table columns={columns} rowKey="id" {...tableProps} />
       <AddModal
-        roles={roles}
         record={record}
         visible={addVisible}
         onOk={(values) => handleOK(values)}

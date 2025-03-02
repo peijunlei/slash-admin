@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AiFillGithub, AiFillGoogleCircle, AiFillWechat } from 'react-icons/ai';
 
-import { DEFAULT_USER, TEST_USER } from '@/_mock/assets';
+import { DEFAULT_USER } from '@/_mock/assets';
 import { SignInReq } from '@/api/services/userService';
 import { useSignIn } from '@/store/userStore';
 import ProTag from '@/theme/antd/components/tag';
@@ -43,14 +43,13 @@ function LoginForm() {
       >
         <div className="mb-4 flex flex-col">
           <Alert
-            
             type="info"
             description={
               <div className="flex flex-col">
                 <div className="flex">
                   <ProTag className="flex-shrink-0">Admin:</ProTag>
                   <strong className="ml-1" style={{ color: themeToken.colorInfoTextHover }}>
-                    <span>peijunlei084532@gmail.com</span>
+                    <span>1594000695@qq.com</span>
                   </strong>
                 </div>
               </div>

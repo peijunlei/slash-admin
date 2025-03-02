@@ -1,20 +1,25 @@
+import { useRequest } from 'ahooks';
 import { Form, Input, Modal, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import roleService from '@/api/services/roleService';
 import { phoneReg } from '@/utils/validate';
 
 interface AddModalProps {
   visible: boolean;
   record: any;
-  roles: any[];
   onOk: (values: any) => Promise<void>;
   onCancel: () => void;
 }
-function AddModal({ visible, record, roles, onOk, onCancel }: AddModalProps) {
+function AddModal({ visible, record, onOk, onCancel }: AddModalProps) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const { data, run } = useRequest(roleService.fetchAllRoles, {
+    manual: true,
+  });
+  const roles = data?.list || [];
   const handleOK = () => {
     if (record?.disabled) {
       onCancel();
@@ -36,6 +41,13 @@ function AddModal({ visible, record, roles, onOk, onCancel }: AddModalProps) {
   useEffect(() => {
     form.resetFields();
   }, [visible, form]);
+
+  useEffect(() => {
+    if (visible) {
+      run();
+    }
+  }, [visible, run]);
+
   if (!visible) return null; // Add this line
   return (
     <Modal

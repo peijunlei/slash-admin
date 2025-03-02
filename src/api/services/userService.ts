@@ -44,7 +44,7 @@ const findById = (id: string) => apiClient.get<UserInfo[]>({ url: `${UserApi.Use
 
 const fetchAllUsers = (data: FetAllUsersReq) =>
   apiClient.get<{
-    list: UserInfo[];
+    list: IUser[];
     total: number;
   }>({ url: Users, params: data });
 

@@ -2,7 +2,6 @@ import { Form, Input, Modal, Radio } from 'antd';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Api } from '#/entity';
 import { ApiMethod } from '#/enum';
 
 interface AddModalProps {
@@ -11,7 +10,7 @@ interface AddModalProps {
   onOk: (values: any) => Promise<void>;
   onCancel: () => void;
 }
-function AddModal({ visible, record, roles, onOk, onCancel }: AddModalProps) {
+function AddModal({ visible, record, onOk, onCancel }: AddModalProps) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
@@ -55,18 +54,18 @@ function AddModal({ visible, record, roles, onOk, onCancel }: AddModalProps) {
         initialValues={record}
         disabled={!!record?.disabled}
       >
-        <Form.Item<Api> name="id" noStyle>
+        <Form.Item<IApi> name="id" noStyle>
           <Input type="hidden" />
         </Form.Item>
         {/* 手机号 */}
-        <Form.Item<Api>
+        <Form.Item<IApi>
           label="接口名称"
           name="apiName"
           rules={[{ required: true, whitespace: true }]}
         >
           <Input />
         </Form.Item>
-        <Form.Item<Api>
+        <Form.Item<IApi>
           label="接口地址"
           name="apiUrl"
           rules={[{ required: true, whitespace: true }]}
@@ -74,7 +73,7 @@ function AddModal({ visible, record, roles, onOk, onCancel }: AddModalProps) {
           <Input />
         </Form.Item>
         {/* 角色  roleIds */}
-        <Form.Item<Api> label="请求方式" name="method">
+        <Form.Item<IApi> label="请求方式" name="method">
           <Radio.Group
             options={[
               {

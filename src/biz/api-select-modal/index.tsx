@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 
 import apiService from '@/api/services/apiService';
 
-import { Api } from '#/entity';
 import { ApiMethod } from '#/enum';
 
 interface ApiSelectModalProps {
@@ -38,7 +37,7 @@ function ApiSelectModal({ visible, selectKeys, onOk, onCancel }: ApiSelectModalP
       list: res.list,
     };
   }
-  const columns: TableColumnsType<Api> = [
+  const columns: TableColumnsType<IApi> = [
     {
       title: '接口名称',
       dataIndex: 'apiName',
@@ -90,16 +89,17 @@ function ApiSelectModal({ visible, selectKeys, onOk, onCancel }: ApiSelectModalP
           method: null,
         }}
       >
-        <Form.Item<Api> label="接口名称" name="apiName">
+        <Form.Item<IApi> label="接口名称" name="apiName">
           <Input />
         </Form.Item>
-        <Form.Item<Api> label="接口地址" name="apiUrl">
+        <Form.Item<IApi> label="接口地址" name="apiUrl">
           <Input />
         </Form.Item>
-        <Form.Item<Api> label="请求方式" name="method">
+        <Form.Item<IApi> label="请求方式" name="method">
           <Select
             placeholder="请选择请求方式"
             style={{ width: 120 }}
+            allowClear
             options={[
               { label: 'GET', value: ApiMethod.GET },
               { label: 'POST', value: ApiMethod.POST },

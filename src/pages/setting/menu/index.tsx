@@ -8,7 +8,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Button, Modal, Table, TableColumnsType, message } from 'antd';
+import { Button, Modal, Table, message } from 'antd';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -21,9 +21,10 @@ import { arryToTree } from '@/utils';
 import AddFuncModal from './add-func-modal';
 import AddModal from './add-modal';
 
-import { Menu, MenuFunc } from '#/entity';
+import { ExtraMenuType, MenuType } from '#/enum';
 import type { DragEndEvent } from '@dnd-kit/core';
 import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
+import type { TableProps } from 'antd';
 
 interface RowContextProps {
   setActivatorNodeRef?: (element: HTMLElement | null) => void;
@@ -79,11 +80,12 @@ export default function IndexPage() {
   const [addVisible, setAddVisible] = useState(false);
   const [funcVisible, setFuncVisible] = useState(false);
   const [apiVisible, setApiVisible] = useState(false);
-  const [dataSource, setDataSource] = useState<MenuFunc[]>([]);
+  const [dataSource, setDataSource] = useState<MenuFuncApi[]>([]);
   const [loading, setLoading] = useState(false);
-  const [record, setRecord] = useState<MenuFunc>();
+  const [record, setRecord] = useState<MenuFuncApi>();
   const [parentId, setParentId] = useState<string | undefined>(undefined);
   const [menuId, setMenuId] = useState<string>('');
+  const [funcId, setFuncId] = useState<string>('');
   async function getTableData() {
     setLoading(true);
     const res = await menuService.fetchMenuAuthList();
@@ -91,13 +93,13 @@ export default function IndexPage() {
       ...v,
       parentId: v.menuId,
       type: 2,
-      children: v.apiIds.length > 0 ? v.apiIds : undefined,
-    })) as unknown as Menu[];
-    const list = arryToTree(res.menus.concat(funcs));
+      children: v.apis.length > 0 ? v.apis : undefined,
+    }));
+    const list = arryToTree([...res.menus, ...funcs]);
     setDataSource(list);
     setLoading(false);
   }
-  const columns: TableColumnsType<MenuFunc> = [
+  const columns: TableProps<MenuFuncApi>['columns'] = [
     // {
     //   key: 'sort',
     //   width: 100,
@@ -109,17 +111,14 @@ export default function IndexPage() {
       title: '菜单名称',
       dataIndex: 'label',
       render: (value, row) => {
-        if (row.apiName) {
-          return `${row.apiName}- ${row.method} - (${row.apiUrl})`;
-        }
-        return value || row.functionName || row.apiName;
+        return value || row.functionName || `${row.apiName}- ${row.method} - (${row.apiUrl})`;
       },
     },
     {
       title: '操作',
       key: 'action',
       dataIndex: 'action',
-      render: (v, row) => (
+      render: (_, row) => (
         <TableActions>
           {row.type === 0 && (
             <Button
@@ -147,7 +146,7 @@ export default function IndexPage() {
             <Button
               type="link"
               onClick={() => {
-                setRecord(row);
+                setFuncId(row.id);
                 setApiVisible(true);
               }}
             >
@@ -160,7 +159,7 @@ export default function IndexPage() {
                 type="link"
                 onClick={() => {
                   setRecord(row);
-                  if (row.type === 2) {
+                  if (row.type === ExtraMenuType.FUNCTION) {
                     setFuncVisible(true);
                   } else {
                     setAddVisible(true);
@@ -192,17 +191,17 @@ export default function IndexPage() {
     values.id ? await funcService.updateFunc(values.id, values) : await funcService.addFunc(values);
     refresh();
   }
-  async function handleDel(id, type) {
+  async function handleDel(id: string, type: MenuType | ExtraMenuType) {
     Modal.confirm({
       title: t('删除'),
       content: t('确定删除吗？'),
       onOk: async () => {
         switch (type) {
-          case 0:
-          case 1:
+          case MenuType.FIRST_MENU:
+          case MenuType.SECOND_MENU:
             await menuService.delMenu(id);
             break;
-          case 2:
+          case ExtraMenuType.FUNCTION:
             await funcService.delFunc(id);
             break;
           default:
@@ -276,6 +275,7 @@ export default function IndexPage() {
         onOk={(values) => handleFuncOK(values)}
         onCancel={() => {
           setFuncVisible(false);
+          setRecord(undefined);
           setMenuId('');
         }}
       />
@@ -285,11 +285,11 @@ export default function IndexPage() {
           setApiVisible(false);
         }}
         onOk={async (keys) => {
-          await funcService.updateFunc(record?.id, { apiIds: keys });
+          await funcService.updateFunc(funcId, { apiIds: keys });
           message.success('操作成功');
           refresh();
         }}
-        selectKeys={record?.apiIds.map((i) => i.id)}
+        selectKeys={record?.apiIds || []}
       />
     </div>
   );
