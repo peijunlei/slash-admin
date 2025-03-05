@@ -46,7 +46,7 @@ const PAGE_NOT_FOUND_ROUTE: AppRouteObject = {
 };
 
 export default function Router() {
-  const permissionRoutes = usePermissionRoutes();
+  const permissionRoutes = usePermissionRoutes()?.filter((item) => item.path !== 'dashboard');
   console.log('permissionRoutes', permissionRoutes);
   const asyncRoutes: AppRouteObject = {
     path: '/',
@@ -55,29 +55,31 @@ export default function Router() {
         <DashboardLayout />
       </AuthGuard>
     ),
-    children: [...permissionRoutes],
-    // children: [
-    //   {
-    //     index: true,
-    //     element: <Navigate to={HOMEPAGE} replace />,
-    //   },
-    //   {
-    //     path: 'dashboard',
-    //     children: [
-    //       {
-    //         index: true,
-    //         element: <Navigate to="workbench" replace />,
-    //       },
-    //       {
-    //         path: 'workbench',
-    //         element: <HomePage />,
-    //       },
-    //       {
-    //         path: 'analysis',
-    //         element: <Analysis />,
-    //       },
-    //     ],
-    //   },
+    // children: [...permissionRoutes],
+    children: [
+      {
+        index: true,
+        element: <Navigate to={HOMEPAGE} replace />,
+      },
+      {
+        path: 'dashboard',
+        children: [
+          {
+            index: true,
+            element: <Navigate to="workbench" replace />,
+          },
+          {
+            path: 'workbench',
+            element: <HomePage />,
+          },
+          {
+            path: 'analysis',
+            element: <Analysis />,
+          },
+        ],
+      },
+      ...permissionRoutes,
+    ],
     //   {
     //     path: 'customer',
     //     children: [
@@ -126,7 +128,7 @@ export default function Router() {
     //   },
     // ],
   };
-  const routes = [LoginRoute, CanvasRoutes, asyncRoutes, ErrorRoutes, PAGE_NOT_FOUND_ROUTE];
+  const routes = [LoginRoute, asyncRoutes, ErrorRoutes, PAGE_NOT_FOUND_ROUTE];
 
   const router = createHashRouter(routes as unknown as RouteObject[]);
   return <RouterProvider router={router} />;
