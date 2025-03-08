@@ -1,5 +1,6 @@
 import { Col, Row } from 'antd';
 import Color from 'color';
+import { useTranslation } from 'react-i18next';
 
 import Character3 from '@/assets/images/characters/character_3.png';
 import { useUserInfo } from '@/store/userStore';
@@ -8,7 +9,7 @@ import { useThemeToken } from '@/theme/hooks';
 export default function BannerCard() {
   const { username } = useUserInfo();
   const themeToken = useThemeToken();
-
+  const { t } = useTranslation();
   const bg = `linear-gradient(135deg, ${Color(themeToken.colorPrimaryHover).alpha(0.2)}, ${Color(
     themeToken.colorPrimary,
   ).alpha(0.2)}) rgb(255, 255, 255)`;
@@ -25,7 +26,7 @@ export default function BannerCard() {
           className="mt-4 text-lg font-semibold md:text-xl"
           style={{ color: themeToken.colorPrimaryActive }}
         >
-          <h4>Welcome back 👋 </h4>
+          <h4>{t('欢迎回来')} 👋 </h4>
           <h4>{username}</h4>
         </div>
         <p
@@ -36,8 +37,11 @@ export default function BannerCard() {
           anything.
         </p>
         <button
-          className="font-mediumtext-black m-auto flex items-center justify-center rounded-md px-2 py-1 shadow-none md:m-0"
-          style={{ backgroundColor: themeToken.colorPrimary }}
+          className="m-auto flex items-center justify-center rounded-md px-4 py-2 text-white shadow-none transition-all duration-200 hover:opacity-90 active:translate-y-[2px] md:m-0"
+          style={{
+            backgroundColor: themeToken.colorPrimary,
+            boxShadow: `0 2px 4px ${Color(themeToken.colorPrimary).alpha(0.25)}`,
+          }}
         >
           Go Now
         </button>
@@ -115,7 +119,7 @@ function BannerSvg() {
       <g opacity="0.48">
         <path
           fill="url(#paint1_linear_1_51)"
-          d="M306.33 166.969c.478 1.241.717 1.861 1.228 2.212.512.351 1.176.351 2.505.351h.314c2.649 0 3.973 0 4.569-.869.596-.87.118-2.105-.839-4.574l-1.586-4.099c-.479-1.237-.718-1.855-1.229-2.205-.511-.351-1.175-.351-2.501-.351h-.305c-2.644 0-3.966 0-4.562.868-.596.868-.121 2.102.829 4.569l1.577 4.098z"
+          d="M306.33 166.969c.478 1.241.717 1.861 1.228 2.212.512.351 1.176.351 2.505.351h.314c2.649 0 3.973 0 4.569-.869.596-.87.118-2.105-.839-4.574l-1.586-4.099c-.479-1.237-.718-1.855-1.229-2.205-.511-.351-1.175-.351-2.501-.351h-.305c-2.644 0-3.966 0-4.562.868-.596.596-.121 2.102.829 4.569l1.577 4.098z"
         />
         <path
           fill="url(#paint2_linear_1_51)"

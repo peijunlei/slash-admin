@@ -37,7 +37,7 @@ export default function TotalCard({ title, increase, count, percent, chartData }
 function ChartLine({ data }: { data: number[] }) {
   const series = [
     {
-      name: '',
+      name: '人数',
       data,
     },
   ];
