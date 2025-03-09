@@ -1,4 +1,4 @@
-import { message as Message } from 'antd';
+import { message as Message, message } from 'antd';
 import axios, { AxiosRequestConfig, AxiosError, AxiosResponse } from 'axios';
 import { isEmpty } from 'ramda';
 
@@ -36,14 +36,14 @@ axiosInstance.interceptors.response.use(
   (res: AxiosResponse<Result>) => {
     if (!res.data) throw new Error(t('sys.api.apiRequestFailed'));
 
-    const { code, data, message } = res.data;
+    const { code, data, message: msg } = res.data;
     // 业务请求成功
     if (code === ResultEnum.SUCCESS) {
       return data;
     }
-
+    message.error(msg);
     // 业务请求错误
-    throw new Error(message || t('sys.api.apiRequestFailed'));
+    throw new Error(msg || t('sys.api.apiRequestFailed'));
   },
   (error: AxiosError<Result>) => {
     const { response, message } = error || {};

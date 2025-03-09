@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import { Button, Form, Input, Space, Statistic, message } from 'antd';
+import { useCountDown } from 'ahooks';
+import { Button, Col, Form, Input, Row, Statistic, message } from 'antd';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -11,8 +12,11 @@ import { LoginStateEnum, useLoginStateContext } from './providers/LoginStateProv
 const { Countdown } = Statistic;
 function RegisterForm() {
   const [form] = Form.useForm();
-  const [isCountdown, setIsCountdown] = useState(false);
   const { t } = useTranslation();
+  const [targetDate, setTargetDate] = useState<number>();
+  const [countdown] = useCountDown({
+    targetDate,
+  });
   const signUpMutation = useMutation(userService.signup);
   const sendCodeMutation = useMutation(userService.sendCode);
 
@@ -22,15 +26,15 @@ function RegisterForm() {
   const onFinish = async (values: any) => {
     console.log('Received values of form: ', values);
     await signUpMutation.mutateAsync(values);
-    // backToLogin();
+    message.success('注册成功');
+    backToLogin();
   };
   function handleClick() {
     // 验证邮箱是否存在
-    form.validateFields(['email']).then(async () => {
-      const email = form.getFieldValue('email');
+    form.validateFields(['email']).then(async ({ email }) => {
       await sendCodeMutation.mutateAsync(email);
       message.success('验证码发送成功');
-      setIsCountdown(true);
+      setTargetDate(Date.now() + 5 * 1000);
     });
   }
   return (
@@ -51,33 +55,24 @@ function RegisterForm() {
         </Form.Item>
         <Form.Item
           name="code"
-          rules={[
-            { required: true, message: '请输入验证码' },
-            {
-              pattern: /^\d{6}$/,
-              message: '验证码格式不正确',
-            },
-          ]}
+          rules={[{ required: true, message: t('sys.login.mobilePlaceholder') }]}
         >
-          <Space.Compact style={{ width: '100%' }}>
-            <Input placeholder="请输入验证码" />
-            <Button type="primary" onClick={() => handleClick()} disabled={isCountdown}>
-              {isCountdown ? (
-                <Countdown
-                  format="mm:ss"
-                  valueStyle={{
-                    lineHeight: 1,
-                    color: 'rgba(0, 0, 0, 0.25)',
-                    fontSize: 16,
-                  }}
-                  value={Date.now() + 60 * 1000}
-                  onFinish={() => setIsCountdown(false)}
-                />
-              ) : (
-                '发送验证码'
-              )}
-            </Button>
-          </Space.Compact>
+          <Row justify="space-between">
+            <Col span={14}>
+              <Input placeholder={t('sys.login.smsCode')} />
+            </Col>
+            <Col span={9} flex={1}>
+              <Button disabled={countdown !== 0} className="w-full !text-sm" onClick={handleClick}>
+                {countdown === 0 ? (
+                  <span>{t('sys.login.sendSmsButton')}</span>
+                ) : (
+                  <span>
+                    {t('sys.login.sendSmsText', { second: Math.round(countdown / 1000) })}
+                  </span>
+                )}
+              </Button>
+            </Col>
+          </Row>
         </Form.Item>
         {/* <Countdown title="Countdown" value={Date.now() + 10 * 1000} onChange={() => {}} /> */}
         <Form.Item
