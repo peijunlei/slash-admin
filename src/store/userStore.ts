@@ -72,6 +72,59 @@ export const useSignIn = () => {
         funcService.fetchFuncPermissions(),
       ]);
       setItem(StorageEnum.FUNC_CODES, funcRes);
+      if (menuRes.list.length === 0) {
+        // 如果菜单为空，则默认显示仪表和工作台
+        menuRes.list = [
+          {
+            label: '仪表',
+            route: 'dashboard',
+            parentId: null,
+            icon: 'uil:dashboard',
+            type: 0,
+            order: 1,
+            path: 'dashboard',
+            hide: false,
+            disabled: false,
+            newFeature: false,
+            delflag: false,
+            createTime: '2024-08-31T07:59:17.795Z',
+            updateTime: '2024-08-31T07:59:17.795Z',
+            id: '665b3a7b236b646af4a352bd',
+          },
+          {
+            newFeature: false,
+            label: '工作台',
+            route: 'workbench',
+            parentId: '665b3a7b236b646af4a352bd',
+            icon: null,
+            type: 1,
+            order: 1,
+            path: 'workbench',
+            hide: false,
+            disabled: false,
+            delflag: false,
+            createTime: '2025-03-09T07:52:37.482Z',
+            updateTime: '2025-03-09T07:52:37.482Z',
+            id: '665b3b62236b646af4a352bf',
+          },
+          {
+            newFeature: false,
+            label: '分析',
+            route: 'analysis',
+            parentId: '665b3a7b236b646af4a352bd',
+            icon: null,
+            type: 1,
+            order: 2,
+            path: 'analysis',
+            hide: false,
+            disabled: false,
+            delflag: false,
+            createTime: '2025-03-09T07:52:37.482Z',
+            updateTime: '2025-03-09T07:52:37.482Z',
+            id: '665b3be5236b646af4a352c1',
+          },
+        ];
+      }
       const treeData = arrayToTree(menuRes.list);
       userInfo.permissions = treeData;
       setUserInfo(userInfo);
