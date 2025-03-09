@@ -59,7 +59,7 @@ axiosInstance.interceptors.response.use(
       case 401:
         // 跳转登录页
         removeItem(StorageEnum.Token);
-        window.location.href = '/login';
+        window.location.hash = '#/login';
         break;
       default:
         break;

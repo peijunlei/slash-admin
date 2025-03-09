@@ -22,6 +22,10 @@ const LoginRoute: AppRouteObject = {
   path: '/login',
   Component: lazy(() => import('@/pages/sys/login/Login')),
 };
+const ResetPasswordRoute: AppRouteObject = {
+  path: '/reset-password/:token',
+  Component: lazy(() => import('@/pages/sys/reset-password/Login')),
+};
 const PAGE_NOT_FOUND_ROUTE: AppRouteObject = {
   path: '*',
   element: <Navigate to="/404" replace />,
@@ -62,7 +66,14 @@ export default function Router() {
       ...permissionRoutes,
     ],
   };
-  const routes = [LoginRoute, WelcomeRoute, asyncRoutes, ErrorRoutes, PAGE_NOT_FOUND_ROUTE];
+  const routes = [
+    LoginRoute,
+    ResetPasswordRoute,
+    WelcomeRoute,
+    asyncRoutes,
+    ErrorRoutes,
+    PAGE_NOT_FOUND_ROUTE,
+  ];
 
   const router = createHashRouter(routes as unknown as RouteObject[]);
   return <RouterProvider router={router} />;
