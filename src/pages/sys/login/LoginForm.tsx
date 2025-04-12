@@ -44,12 +44,12 @@ function LoginForm() {
         <div className="mb-4 flex flex-col">
           <Alert
             type="info"
+            message=""
             description={
               <div className="flex flex-col">
                 <div className="flex">
-                  <ProTag className="flex-shrink-0">Admin:</ProTag>
                   <strong className="ml-1" style={{ color: themeToken.colorInfoTextHover }}>
-                    <span>1594000695@qq.com</span>
+                    <span>请使用邮箱注册访问</span>
                   </strong>
                 </div>
               </div>
